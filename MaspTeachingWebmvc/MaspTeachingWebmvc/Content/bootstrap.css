@@ -757,10 +757,10 @@ pre code {
 }
 
 .container {
-  padding-right: 15px;
-  padding-left: 15px;
-  margin-right: auto;
-  margin-left: auto;
+    padding-left: 15px;
+    padding-right: 15px;
+    margin-right: auto;
+    margin-left: auto;
 }
 
 .container:before,
@@ -4384,31 +4384,30 @@ textarea.input-group-sm > .input-group-btn > .btn {
 }
 
 .navbar-default {
-  background-color: #f8f8f8;
-  border-color: #e7e7e7;
+  background-color: #3b5998;
 }
 
 .navbar-default .navbar-brand {
-  color: #777777;
+  color: #FEFEFE;
 }
 
 .navbar-default .navbar-brand:hover,
 .navbar-default .navbar-brand:focus {
-  color: #5e5e5e;
+  color: #FAFAFA;
   background-color: transparent;
 }
 
 .navbar-default .navbar-text {
-  color: #777777;
+  color: #FEFEFE;
 }
 
 .navbar-default .navbar-nav > li > a {
-  color: #777777;
+  color: #FEFEFE;
 }
 
 .navbar-default .navbar-nav > li > a:hover,
 .navbar-default .navbar-nav > li > a:focus {
-  color: #333333;
+  color: #F7F7F7;
   background-color: transparent;
 }
 
@@ -4465,13 +4464,13 @@ textarea.input-group-sm > .input-group-btn > .btn {
 }
 
 .navbar-default .navbar-nav > .dropdown > a .caret {
-  border-top-color: #777777;
-  border-bottom-color: #777777;
+  border-top-color: #FEFEFE;
+  border-bottom-color: #FEFEFE;
 }
 
 @media (max-width: 767px) {
   .navbar-default .navbar-nav .open .dropdown-menu > li > a {
-    color: #777777;
+    color: #FEFEFE;
   }
   .navbar-default .navbar-nav .open .dropdown-menu > li > a:hover,
   .navbar-default .navbar-nav .open .dropdown-menu > li > a:focus {
@@ -4493,11 +4492,11 @@ textarea.input-group-sm > .input-group-btn > .btn {
 }
 
 .navbar-default .navbar-link {
-  color: #777777;
+  color: #FEFEFE;
 }
 
 .navbar-default .navbar-link:hover {
-  color: #333333;
+  color: #F7F7F7;
 }
 
 .navbar-inverse {
@@ -4590,7 +4589,7 @@ textarea.input-group-sm > .input-group-btn > .btn {
     border-color: #080808;
   }
   .navbar-inverse .navbar-nav .open .dropdown-menu > li > a {
-    color: #999999;
+    color: #F7F7F7;
   }
   .navbar-inverse .navbar-nav .open .dropdown-menu > li > a:hover,
   .navbar-inverse .navbar-nav .open .dropdown-menu > li > a:focus {
@@ -4606,13 +4605,13 @@ textarea.input-group-sm > .input-group-btn > .btn {
   .navbar-inverse .navbar-nav .open .dropdown-menu > .disabled > a,
   .navbar-inverse .navbar-nav .open .dropdown-menu > .disabled > a:hover,
   .navbar-inverse .navbar-nav .open .dropdown-menu > .disabled > a:focus {
-    color: #444444;
+    color: #F7F7F7;
     background-color: transparent;
   }
 }
 
 .navbar-inverse .navbar-link {
-  color: #999999;
+  color: #F7F7F7;
 }
 
 .navbar-inverse .navbar-link:hover {
