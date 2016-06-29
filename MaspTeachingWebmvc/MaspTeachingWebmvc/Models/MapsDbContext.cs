@@ -55,4 +55,12 @@ namespace MaspTeachingWebmvc.Models
         public string Email { get; set; }
         public bool Status { get; set; }
     }
+
+    public enum AdminType
+    {
+        Admin,
+        Supervisor,
+        Principal,
+        Teacher
+    }
 }

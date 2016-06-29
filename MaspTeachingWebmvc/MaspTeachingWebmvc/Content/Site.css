@@ -311,10 +311,12 @@ height: 100%;
 	cursor:pointer;
 	background-color:#F7F7F7;
 	color:gray;
+	padding:3px;
 }
 
 .onHoverActive{
 	cursor:pointer;
 	background-color:#E7E7E7;
 	color:gray;
+	padding:3px;
 }

@@ -9,6 +9,7 @@ namespace MaspTeachingWebmvc.Models
     public partial class Admin
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+
         public Admin()
         {
             AdminClasses = new HashSet<AdminClass>();
@@ -38,13 +39,5 @@ namespace MaspTeachingWebmvc.Models
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<AdminSubject> AdminSubjects { get; set; }
-    }
-
-    enum AdminType
-    {
-        Admin,
-        Supervisor,
-        Principal,
-        Teacher
     }
 }
