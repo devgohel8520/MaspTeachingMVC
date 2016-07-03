@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using EduExamine.Models;
 using System.Web;
 using System.Web.Mvc;
 
@@ -8,22 +6,16 @@ namespace EduExamine.Controllers
 {
     public class HomeController : Controller
     {
+        EduExamineContext _db;
+        public HttpCookie userCookie;
+        public string AdminType;
+
+        public HomeController()
+        {
+            _db = new EduExamineContext();
+        }
         public ActionResult Index()
         {
-            return View();
-        }
-
-        public ActionResult About()
-        {
-            ViewBag.Message = "Your application description page.";
-
-            return View();
-        }
-
-        public ActionResult Contact()
-        {
-            ViewBag.Message = "Your contact page.";
-
             return View();
         }
     }
