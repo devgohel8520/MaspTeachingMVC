@@ -1,0 +1,47 @@
+﻿@using PagedList;
+@using PagedList.Mvc;
+@model IPagedList<EduExamine.Models.Classes>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+@section Adminmenu
+{
+    @Html.Partial("~/Views/Shared/Adminmenu.cshtml")
+}
+<div class="container-start">
+    <div class="row">
+
+        <div class="col-md-12 text-left">
+            <h5>
+                @Html.ActionLink("+ Add New", "Create")
+            </h5>
+        </div>
+
+        <div class="col-md-12">
+            @foreach (var item in Model)
+            {
+                <div class="col-lg-2 newBox" title="@item.ClassName">
+                    <div class="row head">
+                        @item.ClassName
+                    </div>
+                    <div class="row control">
+                        <div class="col-md-4 btntext">
+                            @Html.ActionLink("Subjects", "SubjectDisplay", new { id = item.ClassesId })
+                        </div>
+                        <div class="col-md-4 btntext">
+                            @Html.ActionLink("Edit", "Edit", new { id = item.ClassesId })
+                        </div>
+                        <div class="col-md-4 btntext">
+                            @Html.ActionLink("Delete", "Delete", new { id = item.ClassesId })
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+        <div class="col-md-12 text-center top-twenty">
+            @Html.PagedListPager(Model, page => Url.Action("CIndex", new { page }), new PagedListRenderOptions() { Display = PagedListDisplayMode.IfNeeded })
+        </div>
+    </div>
+</div>

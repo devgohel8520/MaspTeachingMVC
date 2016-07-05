@@ -1,0 +1,56 @@
+﻿@using PagedList;
+@using PagedList.Mvc;
+@model IPagedList<EduExamine.Models.Subject>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+@section Adminmenu
+{
+    @Html.Partial("~/Views/Shared/Adminmenu.cshtml")
+}
+<div class="container-start">
+    <div class="row">
+        <div class="col-md-12 top_head">
+            <a href="@Url.Action("CIndex", "Classes", null)" class="lnk lnk-default">
+                @Model.First().Classes.ClassName
+            </a>
+            <span class="glyphicon glyphicon-menu-right small"></span>
+            Subjects
+        </div>
+        <div class="col-md-12 text-left">
+            <h5>
+                @Html.ActionLink("+ Add New", "SubjectCreate", new { ClassesId = @Model.First().Classes.ClassesId })
+            </h5>
+        </div>
+
+        <div class="col-md-12">
+            @if(Model.First().SubjectName!=null)
+            { 
+            foreach (var item in Model)
+            {
+                <div class="col-lg-2 newBox" title="@item.SubjectName">
+                    <div class="row head">
+                        @item.SubjectName
+                    </div>
+                    <div class="row control">
+                        <div class="col-md-4 btntext">
+                            @Html.ActionLink("Chapters", "ChapterDisplay", new { id = item.SubjectId, ClassesId = item.ClassesId })
+                        </div>
+                        <div class="col-md-4 btntext">
+                            @Html.ActionLink("Edit", "SubjectEdit", new { id = item.SubjectId})
+                        </div>
+                        <div class="col-md-4 btntext">
+                            @Html.ActionLink("Delete", "SubjectDelete", new { id = item.SubjectId})
+                        </div>
+                    </div>
+                </div>
+            }
+            }
+        </div>
+        <div class="col-md-12 text-center top-twenty">
+            @Html.PagedListPager(Model, page => Url.Action("SubjectDisplay", new { page }), new PagedListRenderOptions() { Display = PagedListDisplayMode.IfNeeded })
+        </div>
+    </div>
+</div>

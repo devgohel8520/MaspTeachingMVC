@@ -1,0 +1,33 @@
+﻿@using EduExamine.Models;
+@model IEnumerable<EduExamine.Models.Admin>
+
+
+@functions{
+    public string classResult(AdminType adminType, AdminType menuId)
+    {
+        return Model.First().Types.Equals(adminType) && Model.First().Types.Equals(menuId) ? "col-md-6 onHoverActive" : "col-md-6 onHover";
+    }
+}
+
+<div class="@classResult(Model.First().Types,AdminType.Admin)">
+    <a class="text-center" href="@Url.Action("AdIndexAdmin", new { menuId = 0 })">
+        <h5>Admin</h5>
+    </a>
+</div>
+<div class="@classResult(Model.First().Types,AdminType.SuperVisor)">
+    <a class="text-center" href="@Url.Action("AdIndexAdmin", new { menuId = 1 })">
+        <h5>Supervisor</h5>
+    </a>
+</div>
+
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+            $('a.text-center').click(function () {
+                alert($(this).closest('div'));
+                console.log($(this).closest('div').parent().class());
+            });
+        });
+    </script>
+}

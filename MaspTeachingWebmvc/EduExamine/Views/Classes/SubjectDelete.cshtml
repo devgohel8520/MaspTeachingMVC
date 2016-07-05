@@ -1,0 +1,45 @@
+﻿@model EduExamine.Models.Subject
+
+@{
+    ViewBag.Title = "Delete " + Model.SubjectName ;
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+@section Adminmenu
+{
+    @Html.Partial("~/Views/Shared/Adminmenu.cshtml")
+}
+
+<div class="container-start">
+    <div class="row">
+        <div class="col-md-12">
+            <h4 style="font-weight:normal; font-family:'Century Gothic';">Delete Subject</h4>
+        </div>
+        <div class="col-md-12 top-twenty">
+            @using (Ajax.BeginForm("SubjectDelete", new AjaxOptions { }))
+            {
+                <div class="alert-danger error-list">
+                    <div id="errorD" style="padding:10px; margin-bottom:20px; display:none;">
+
+                    </div>
+                </div>
+
+                @Html.AntiForgeryToken()
+                @Html.HiddenFor(d => d.ClassesId)
+                @Html.HiddenFor(d =>d.SubjectId)
+                <p>Are you sure want to remove?</p>
+                <div class="form-group input-group input-group-lg">
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-tags"></i></span>
+                    @Html.EditorFor(model => model.SubjectName, new { htmlAttributes = new { @class = "form-control", @placeholder = "ENTER SUBJECT NAME" } })
+                    @Html.ValidationMessageFor(model => model.SubjectName, "", new { @class = "text-danger form-control-feedback" })
+                </div>
+
+                <div class="form-group text-right">
+                    <input id="submit" type="button" value="Delete" onclick="submitUniversal(this, '@Url.Action("SubjectDisplay", "Classes", new { id = Model.ClassesId })')" class="btn btn-danger" />
+                    <a href="@Url.Action("SubjectDisplay", "Classes", new { id = Model.ClassesId })" class="btn btn-default">
+                        Back
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+</div>

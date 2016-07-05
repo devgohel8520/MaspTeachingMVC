@@ -75,7 +75,7 @@ body {
 
 .container-start
 {
-	margin-top:80px;
+	margin-top:60px;
 }
 
 .top-footer
@@ -118,7 +118,7 @@ body {
 	color: #666;
 }
 .top-twenty{
-	margin-top:20px;
+	margin-top:10px;
 }
 
 .top-topic{
@@ -319,4 +319,48 @@ height: 100%;
 	background-color:#E7E7E7;
 	color:gray;
 	padding:3px;
+}
+
+
+.newBox
+{
+	background-color:#FFF;
+	border:solid 1px #F1F1F1;
+	border-bottom:solid 3px #F1F1F1;
+	margin-bottom:10px;
+	margin-right:10px;
+}
+.newBox:hover {
+	border:solid 1px #F1F1F1;
+	border-bottom:solid 3px #5cb85c;
+}
+.newBox .head
+{
+	padding:10px;
+	font-size:16px;
+	overflow:hidden;
+	text-overflow:ellipsis;
+	height:40px;
+}
+.newBox .control
+{
+	font-size:12px;
+}
+
+.newBox .control .btntext
+{
+	text-align:center;
+	cursor:pointer;
+	padding:5px;
+	background-color:#F7F7F7;
+}
+
+.newBox .control .btntext:hover
+{
+	background-color:#F1F1F1;
+}
+
+.top_head{
+	padding-bottom:10px;
+	border-bottom:solid 1px #F1F1F1;
 }

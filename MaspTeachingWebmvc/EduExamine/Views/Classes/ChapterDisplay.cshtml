@@ -1,0 +1,60 @@
+﻿@using PagedList;
+@using PagedList.Mvc;
+@model IPagedList<EduExamine.Models.Chapter>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+@section Adminmenu
+{
+    @Html.Partial("~/Views/Shared/Adminmenu.cshtml")
+}
+<div class="container-start">
+    <div class="row">
+        <div class="col-md-12 top_head">
+            <a href="@Url.Action("CIndex", "Classes", null)" class="lnk lnk-default">
+                @Model.First().Subject.Classes.ClassName
+            </a>
+            <span class="glyphicon glyphicon-menu-right small"></span>
+            <a href="@Url.Action("SubjectDisplay", "Classes", new { id = Model.First().Subject.ClassesId })" class="lnk lnk-default">
+                @Model.First().Subject.SubjectName
+            </a>
+            <span class="glyphicon glyphicon-menu-right small"></span>
+            Chapters
+        </div>
+        <div class="col-md-12 text-left">
+            <h5>
+                @Html.ActionLink("+ Add New", "ChapterCreate", new { SubjectId = @Model.First().Subject.SubjectId })
+            </h5>
+        </div>
+
+        <div class="col-md-12">
+            @if (Model.First().ChapterName != null)
+            {
+                foreach (var item in Model)
+                {
+                    <div class="col-lg-2 newBox" title="@item.ChapterName">
+                        <div class="row head">
+                            @item.ChapterName
+                        </div>
+                        <div class="row control">
+                            <div class="col-md-4 btntext">
+                                @Html.ActionLink("Settings", "SettingsDisplay", new { id = item.ChapterId })
+                            </div>
+                            <div class="col-md-4 btntext">
+                                @Html.ActionLink("Edit", "ChapterEdit", new { id = item.ChapterId })
+                            </div>
+                            <div class="col-md-4 btntext">
+                                @Html.ActionLink("Delete", "ChapterDelete", new { id = item.ChapterId })
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+        <div class="col-md-12 text-center top-twenty">
+            @Html.PagedListPager(Model, page => Url.Action("ChapterDisplay", new { page }), new PagedListRenderOptions() { Display = PagedListDisplayMode.IfNeeded })
+        </div>
+    </div>
+</div>

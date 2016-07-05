@@ -1,0 +1,74 @@
+﻿@model EduExamine.Models.ChapterDate
+
+@{
+    ViewBag.Title = "Add New";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+@section Adminmenu
+{
+    @Html.Partial("~/Views/Shared/Adminmenu.cshtml")
+}
+<div class="container-start">
+    <div class="row">
+        @if (Model.EduYearId <= 0)
+        {
+            <div class="col-md-12">
+                <h5 style="font-weight:normal; font-family:'Century Gothic';">
+                   Chapter Date 
+                </h5>
+            </div>
+            <div class="col-md-12 top-twenty">
+                @using (Ajax.BeginForm("SettingsDisplay", new AjaxOptions { }))
+                {
+                    <div class="alert-danger error-list">
+                        <div id="errorD" style="padding:10px; margin-bottom:20px; display:none;">
+                        </div>
+                    </div>
+                    @Html.AntiForgeryToken()
+                    @Html.HiddenFor(d => d.Chapter.SubjectId)
+                    @Html.HiddenFor(d => d.ChapterId)
+                    <div class="form-group input-group input-group-lg">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                        @Html.EditorFor(model => model.CStartDate, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.CStartDate, "", new { @class = "text-danger form-control-feedback" })
+                    </div>
+                    <div class="form-group input-group input-group-lg">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                        @Html.EditorFor(model => model.CEndDate, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.CEndDate, "", new { @class = "text-danger form-control-feedback" })
+                    </div>
+                    <div class="form-group input-group input-group-lg">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-adjust"></i></span>
+                        @Html.DropDownList("EduYearId", null, htmlAttributes: new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.EduYearId, "", new { @class = "text-danger form-control-feedback" })
+                    </div>
+                    <div class="form-group text-right">
+                        <input id="submit" type="button" value="Save" onclick="submitUniversal(this, '@Url.Action("ChapterDisplay", "Classes", new { id = Model.Chapter.SubjectId })')" class="btn btn-info" />
+                        <a href="@Url.Action("ChapterDisplay", "Classes", new { id = Model.Chapter.SubjectId })" class="btn btn-default">
+                            Back
+                        </a>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="col-md-12">
+                <h5 style="font-weight:normal; font-family:'Century Gothic';">
+                    @Html.ActionLink("Chapter Date & Teachings", "ChapterDisplay", new { id = Model.Chapter.SubjectId })
+                </h5>
+            </div>
+            <div class="col-md-12">
+                <div class="col-md-12 newBox">
+                    <div class="col-md-2 text-right">START DATE: </div>
+                    <div class="col-md-2">@Model.CStartDate.ToString("dd - MMM - yyyy")</div>
+                    <div class="col-md-2 text-right">END DATE: </div>
+                    <div class="col-md-2">@Model.CEndDate.ToString("dd - MMM - yyyy")</div>
+                </div>
+                <div class="col-md-12 text-center">
+                    @Model.CEndDate.Subtract(Model.CStartDate).TotalDays days need to be completed
+                </div>
+            </div>
+        }
+    </div>
+</div>

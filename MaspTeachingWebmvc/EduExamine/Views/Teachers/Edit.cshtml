@@ -1,0 +1,90 @@
+﻿@model EduExamine.Models.Teacher
+
+@{
+    ViewBag.Title = "Add New";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+@section Adminmenu
+{
+    @Html.Partial("~/Views/Shared/Adminmenu.cshtml")
+}
+
+<div class="container-start">
+    <div class="row">
+        <div class="col-md-12">
+            <h4 style="font-weight:normal; font-family:'Century Gothic';">Add @Model.Types</h4>
+        </div>
+        <div class="col-md-12 top-twenty">
+            @using (Ajax.BeginForm("Edit", new AjaxOptions { }))
+            {
+                <div class="alert-danger error-list">
+                    <div id="errorD" style="padding:10px; margin-bottom:20px; display:none;">
+
+                    </div>
+                </div>
+
+                @Html.AntiForgeryToken()
+                @Html.HiddenFor(model => model.Types)
+                @Html.HiddenFor(model => model.TeacherId)
+
+                <div class="form-group input-group input-group-lg">
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                    @Html.EditorFor(model => model.FullName, new { htmlAttributes = new { @class = "form-control", @placeholder = "ENTER FULL NAME" } })
+                    @Html.ValidationMessageFor(model => model.FullName, "", new { @class = "text-danger form-control-feedback" })
+                </div>
+                <div class="form-group input-group input-group-lg">
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                    @Html.EditorFor(model => model.LoginName, new { htmlAttributes = new { @class = "form-control", @placeholder = "ENTER LOGIN NAME" } })
+                    @Html.ValidationMessageFor(model => model.LoginName, "", new { @class = "text-danger form-control-feedback" })
+                </div>
+                <div class="form-group input-group input-group-lg">
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-star"></i></span>
+                    @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control", @placeholder = "PASSWORD", @type = "password" } })
+                    @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger form-control-feedback" })
+                </div>
+                <div class="form-group input-group input-group-lg">
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-star"></i></span>
+                    <input type="password" id="CPassword" name="CPassword" class="form-control" placeholder="CONFIRM PASSWORD" />
+                </div>
+                <div class="form-group input-group input-group-lg">
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-star"></i></span>
+                    @Html.DropDownList("EduYearId", null, htmlAttributes: new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.EduYearId, "", new { @class = "text-danger form-control-feedback" })
+                </div>
+                <div class="form-group text-right">
+                    <input id="submit" type="button" disabled="disabled" value="Edit" onclick="submitUniversal(this, '@Url.Action("TIndex", "Teachers", new { menuId = (int)Model.Types })');" class="btn btn-success" />
+                    <a href="@Url.Action("TIndex", "Teachers", new { menuId = (int)Model.Types })" class="btn btn-default">
+                        Back
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script>
+        $(document).ready(function () {
+            var errorD = $("div#errorD");
+            $("input#CPassword").on("keyup", function () {
+                var btnSubmit = $("#submit");
+                btnSubmit.attr("disabled", "disabled");
+                var cpassword = $(this).val();
+                var password = $("input#Password").val();
+
+                if (password == cpassword) {
+                    errorD.show();
+                    errorD.text("Password Matched.")
+                    btnSubmit.removeAttr("disabled", "disabled");
+                }
+                else {
+                    errorD.show();
+                    errorD.text("Password does not Matched.")
+                }
+            });
+        });
+    </script>
+}

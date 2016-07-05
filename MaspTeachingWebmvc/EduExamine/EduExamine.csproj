@@ -130,28 +130,50 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\AdminsController.cs" />
+    <Compile Include="Controllers\ClassesController.cs" />
+    <Compile Include="Controllers\EduYearsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\TeachersController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201607031417195_DatabaseScripts.cs" />
-    <Compile Include="Migrations\201607031417195_DatabaseScripts.Designer.cs">
-      <DependentUpon>201607031417195_DatabaseScripts.cs</DependentUpon>
+    <Compile Include="Migrations\201607040715559_EduScripts.cs" />
+    <Compile Include="Migrations\201607040715559_EduScripts.Designer.cs">
+      <DependentUpon>201607040715559_EduScripts.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201607040853282_RequiredField.cs" />
+    <Compile Include="Migrations\201607040853282_RequiredField.Designer.cs">
+      <DependentUpon>201607040853282_RequiredField.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201607051342057_Chapter.cs" />
+    <Compile Include="Migrations\201607051342057_Chapter.Designer.cs">
+      <DependentUpon>201607051342057_Chapter.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\EduExamineContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\bootstrap-theme.css" />
+    <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\PagedList.css" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="fonts\glyphicons-halflings-regular.woff2" />
+    <Content Include="fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Content\bootstrap-theme.min.css.map" />
+    <Content Include="Content\bootstrap-theme.css.map" />
+    <Content Include="Content\bootstrap.min.css.map" />
+    <Content Include="Content\bootstrap.css.map" />
+    <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
-    <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
@@ -183,22 +205,51 @@
     <Content Include="Views\Admins\AdIndex.cshtml" />
     <Content Include="Views\Admins\Login.cshtml" />
     <Content Include="Views\Admins\AdIndexAdmin.cshtml" />
-    <Content Include="Views\Admins\_AdminHomeMenu.cshtml" />
+    <Content Include="Views\Admins\_HomeMenu.cshtml" />
+    <Content Include="Views\Admins\AdCreate.cshtml" />
+    <Content Include="Views\Teachers\_HomeMenu.cshtml" />
+    <Content Include="Views\Teachers\TIndex.cshtml" />
+    <Content Include="Views\Teachers\Create.cshtml" />
+    <Content Include="Views\Admins\AdEdit.cshtml" />
+    <Content Include="Views\Admins\AdDelete.cshtml" />
+    <Content Include="Views\EduYears\Create.cshtml" />
+    <Content Include="Views\EduYears\Delete.cshtml" />
+    <Content Include="Views\EduYears\Details.cshtml" />
+    <Content Include="Views\EduYears\Edit.cshtml" />
+    <Content Include="Views\EduYears\EdIndex.cshtml" />
+    <Content Include="Views\Teachers\Edit.cshtml" />
+    <Content Include="Views\Teachers\Delete.cshtml" />
+    <Content Include="Views\Classes\Create.cshtml" />
+    <Content Include="Views\Classes\Delete.cshtml" />
+    <Content Include="Views\Classes\Details.cshtml" />
+    <Content Include="Views\Classes\Edit.cshtml" />
+    <Content Include="Views\Classes\CIndex.cshtml" />
+    <Content Include="Views\Classes\SubjectDisplay.cshtml" />
+    <Content Include="Views\Classes\SubjectCreate.cshtml" />
+    <Content Include="Views\Classes\SubjectEdit.cshtml" />
+    <Content Include="Views\Classes\SubjectDelete.cshtml" />
+    <Content Include="Views\Classes\ChapterDisplay.cshtml" />
+    <Content Include="Views\Classes\ChapterCreate.cshtml" />
+    <Content Include="Views\Classes\ChapterEdit.cshtml" />
+    <Content Include="Views\Classes\ChapterDelete.cshtml" />
+    <Content Include="Views\Classes\SettingsDisplay.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="fonts\glyphicons-halflings-regular.woff" />
-    <Content Include="fonts\glyphicons-halflings-regular.ttf" />
-    <Content Include="fonts\glyphicons-halflings-regular.svg" />
-    <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <Content Include="packages.config" />
     <None Include="Project_Readme.html" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201607031417195_DatabaseScripts.resx">
-      <DependentUpon>201607031417195_DatabaseScripts.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201607040715559_EduScripts.resx">
+      <DependentUpon>201607040715559_EduScripts.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201607040853282_RequiredField.resx">
+      <DependentUpon>201607040853282_RequiredField.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201607051342057_Chapter.resx">
+      <DependentUpon>201607051342057_Chapter.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

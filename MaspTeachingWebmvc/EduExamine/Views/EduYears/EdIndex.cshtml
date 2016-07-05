@@ -1,0 +1,73 @@
+﻿@using PagedList;
+@using PagedList.Mvc;
+@model IPagedList<EduExamine.Models.EduYear>
+
+@{
+    ViewBag.Title = "LIndex";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+@section Adminmenu
+{
+    @Html.Partial("~/Views/Shared/Adminmenu.cshtml")
+}
+<div class="container-start">
+    <div class="row">
+        <div class="col-md-12">
+            @using (Html.BeginForm())
+            {
+                <div class="input-group">
+
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>
+                    <input id="Search" name="Search" type="text" class="form-control" placeholder="Search your label">
+                    <span class="input-group-btn">
+                        <input id="submit" type="submit" value="Search it" class="btn btn-default" />
+                    </span>
+                </div>
+            }
+        </div>
+        <div class="col-md-12">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.First().EduYearName)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.First().EduStart)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.First().EduEnd)
+                        </th>
+                        <th>
+                            @Html.ActionLink("+ Add", "Create")
+                        </th>
+                    </tr>
+                </thead>
+                <tbody id="searchResult">
+                    @foreach (var item in Model)
+                    {
+                        <tr style="padding:5px; background-color:#F1F1F1; border-bottom: solid 1px #d1d1d1;">
+                            <td>
+                                @Html.DisplayFor(modelItem => item.EduYearName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.EduStart)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.EduEnd)
+                            </td>
+                            <td>
+                                @Html.ActionLink("Edit", "Edit", new { id = item.EduYearId }) |
+                                @Html.ActionLink("Delete", "Delete", new { id = item.EduYearId })
+                            </td>
+                        </tr>
+                    }
+
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-12 text-center">
+            @Html.PagedListPager(Model, page => Url.Action("EdIndex", new { page }), new PagedListRenderOptions() { Display = PagedListDisplayMode.IfNeeded })
+        </div>
+    </div>
+</div>

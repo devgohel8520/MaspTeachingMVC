@@ -1,6 +1,6 @@
 ﻿@using PagedList;
 @using PagedList.Mvc;
-@model IPagedList<EduExamine.Models.Admin>
+@model IPagedList<EduExamine.Models.Teacher>
 
 @{
     ViewBag.Title = "AdIndexAdmin";
@@ -15,24 +15,27 @@
 
     <div class="row">
         <div class="col-md-12">
-            @Html.Partial("~/Views/Admins/_HomeMenu.cshtml", Model)
+            @Html.Partial("~/Views/Teachers/_HomeMenu.cshtml", Model)
         </div>
     </div>
     <div class="row">
         <div class="col-md-12">
-            @if (Model.First().Name != "")
+            @if (Model.First().FullName != "")
             {
                 <table class="table">
                     <thead>
                         <tr>
                             <th>
-                                @Html.DisplayNameFor(model => model.First().Name)
+                                @Html.DisplayNameFor(model => model.First().FullName)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.First().LoginName)
                             </th>
                             <th>
                                 @Html.DisplayNameFor(model => model.First().Types)
                             </th>
                             <th class="text-right">
-                                @Html.ActionLink("+ Add", "AdCreate", new { menuId = (int)Model.First().Types })
+                                @Html.ActionLink("+ Add", "Create", new { menuid = (int)Model.First().Types })
                             </th>
                         </tr>
                     </thead>
@@ -41,15 +44,18 @@
                         {
                             <tr style="padding:5px; background-color:#F1F1F1; border-bottom: solid 1px #d1d1d1;">
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.Name)
+                                    @Html.DisplayFor(modelItem => item.FullName)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.LoginName)
                                 </td>
                                 <td>
                                     @Html.DisplayFor(modelItem => item.Types)
                                 </td>
                                 <td class="text-right">
-                                    @Html.ActionLink("Edit", "AdEdit", new { menuId = (int)item.Types, Adminid = item.AdminId })
+                                    @Html.ActionLink("Edit", "Edit", new { menuid = (int)item.Types, teacherid = item.TeacherId })
                                     <text> | </text>
-                                    @Html.ActionLink("Delete", "AdDelete", new { menuId = (int)item.Types, Adminid = item.AdminId })
+                                    @Html.ActionLink("Delete", "Delete", new { menuid = (int)item.Types, teacherid = item.TeacherId })
 
                                 </td>
 
@@ -64,20 +70,23 @@
                 <table class="table">
                     <tr>
                         <th>
-                            @Html.DisplayNameFor(model => model.First().Name)
+                            @Html.DisplayNameFor(model => model.First().FullName)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.First().LoginName)
                         </th>
                         <th>
                             @Html.DisplayNameFor(model => model.First().Types)
                         </th>
                         <th class="text-right">
-                            @Html.ActionLink("+ Add", "AdCreate", new { menuId = (int)Model.First().Types })
+                            @Html.ActionLink("+ Add", "Create", new { menuId = (int)Model.First().Types })
                         </th>
                     </tr>
                 </table>
             }
         </div>
         <div class="col-md-12 text-center">
-            @Html.PagedListPager(Model, page => Url.Action("AdIndexAdmin", new { page }), new PagedListRenderOptions() { Display = PagedListDisplayMode.IfNeeded })
+            @Html.PagedListPager(Model, page => Url.Action("TIndex", new { page }), new PagedListRenderOptions() { Display = PagedListDisplayMode.IfNeeded})
         </div>
     </div>
 </div>
