@@ -1,0 +1,47 @@
+﻿@model EduExamine.Models.TeachingType
+
+@{
+    ViewBag.Title = "Add New";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+@section Adminmenu
+{
+    @Html.Partial("~/Views/Shared/Adminmenu.cshtml")
+}
+
+<div class="container-start">
+    <div class="row">
+        <div class="col-md-12">
+            <h4 style="font-weight:normal; font-family:'Century Gothic';">Add Teaching Type</h4>
+        </div>
+        <div class="col-md-12 top-twenty">
+            @using (Ajax.BeginForm("Create", new AjaxOptions { }))
+            {
+                <div class="alert-danger error-list">
+                    <div id="errorD" style="padding:10px; margin-bottom:20px; display:none;">
+
+                    </div>
+                </div>
+
+                @Html.AntiForgeryToken()
+                @Html.HiddenFor(d => d.OrderId)
+                <div class="form-group input-group input-group-lg">
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-sort-by-order"></i></span>
+                    @Html.EditorFor(model => model.OrderId, new { htmlAttributes = new { @disabled="disabled", @class = "form-control", @placeholder = "ORDER ID" } })
+                    @Html.ValidationMessageFor(model => model.OrderId, "", new { @class = "text-danger form-control-feedback" })
+                </div>
+                <div class="form-group input-group input-group-lg">
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i></span>
+                    @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control", @placeholder = "ENTER NAME OF TEACHING TYPE" } })
+                    @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger form-control-feedback" })
+                </div>
+                <div class="form-group text-right">
+                    <input id="submit" type="button" value="Save" onclick="submitUniversal(this, '@Url.Action("TTIndex", "TeachingTypes", null)')" class="btn btn-info" />
+                    <a href="@Url.Action("TTIndex", "TeachingTypes", null)" class="btn btn-default">
+                        Back
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+</div>

@@ -195,6 +195,7 @@ namespace EduExamine.Models
         [ForeignKey("Chapter")]
         public long ChapterId { get; set; }
         public Chapter Chapter { get; set; }
+        public bool Status { get; set; }
     }
 
     public class TeacherSubject

@@ -433,7 +433,7 @@ namespace EduExamine.Controllers
         }
 
         //Chapter Subject
-        public ActionResult SettingsDisplay(int? id)
+        public ActionResult SettingsDisplay(int? id, int? eduyearid)
         {
             if (!LoginStatus())
                 return RedirectToAction("Login", "Admins", null);
@@ -444,15 +444,74 @@ namespace EduExamine.Controllers
             }
 
             ViewBag.EduYearId = new SelectList(_db.EduYears, "EduYearId", "EduYearName");
-            ChapterDate model = _db.ChapterDates.Find(id);
+
+            ChapterDate chapterDate = _db.ChapterDates.Find(id);
+
+            ChapterDateAndTeaching model = new ChapterDateAndTeaching();
+
+            if (chapterDate == null)
+            {
+                chapterDate = new ChapterDate();
+            }
+            model.CEndDate = chapterDate.CEndDate;
+            model.CStartDate = chapterDate.CStartDate;
+            model.Chapter = chapterDate.Chapter;
+            model.ChapterId = chapterDate.ChapterId;
+            model.EduYear = chapterDate.EduYear;
+            model.EduYearId = chapterDate.EduYearId;
+            model.TeacherChapterDate = chapterDate.TeacherChapterDate;
+            model.chapterTeachings = new List<ChapterTeaching>();
+
+            if (eduyearid != null)
+            {
+                model.EduYearId = (int)eduyearid;
+                model.Chapter = _db.Chapters.Find(id);
+                return View(model);
+            }
+
             if (model == null)
             {
-                Chapter chapter = _db.Chapters.Find(id);
-                model = new ChapterDate() { ChapterId = (long)id, Chapter = chapter };
+                model.ChapterId = (long)id;
+                model.Chapter = _db.Chapters.Find(id);
                 return View(model);
             }
             else
             {
+                List<ChapterTeaching> lstChapterTeaching = new List<ChapterTeaching>();
+
+                lstChapterTeaching = _db.ChapterTeachings.Where(d => d.ChapterId == id).ToList();
+
+                //if (lstChapterTeaching.Count != 0)
+                //{
+                //    model.chapterTeachings = lstChapterTeaching;
+                //}
+                //else
+                //{
+                var teachingType = _db.TeachingTypes.OrderBy(d => d.OrderId).ToList();
+
+                foreach (var item in teachingType)
+                {
+                    ChapterTeaching findVal = new ChapterTeaching();
+                    findVal = lstChapterTeaching.Find(d => d.TeachingTypeId == item.TeachingTypeId);
+
+                    ChapterTeaching chapterTeaching = new ChapterTeaching()
+                    {
+                        OrderId = findVal != null ? findVal.OrderId : item.OrderId,
+                        MinVal = findVal != null ? findVal.MinVal : 0,
+                        MaxVal = findVal != null ? findVal.MaxVal : 0,
+                        ChapterId = (long)id,
+                        EduYearId = model.EduYearId,
+                        TeachingTypeId = item.TeachingTypeId,
+                        ChapterTeachingId = findVal != null ? findVal.ChapterTeachingId : 0,
+                        Chapter = model.Chapter,
+                        EduYear = model.EduYear,
+                        TeachingType = item,
+                        Status = findVal != null ? findVal.Status : false
+                    };
+                    model.chapterTeachings.Add(chapterTeaching);
+                }
+                //}
+                model.ChapterId = (long)id;
                 model.Chapter = _db.Chapters.Find(id);
                 return View(model);
             }
@@ -460,25 +519,92 @@ namespace EduExamine.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult SettingsDisplay([Bind(Include = "ChapterId,CStartDate,CEndDate,EduYearId")] ChapterDate model)
+        public ActionResult SettingsDisplay([Bind(Include = "ChapterId,CStartDate,CEndDate,EduYearId,chapterTeachings")] ChapterDateAndTeaching model)
         {
             if (!LoginStatus())
                 return RedirectToAction("Login", "Admins", null);
 
             if (ModelState.IsValid)
             {
+                ChapterDate chapterDate = new ChapterDate()
+                {
+                    ChapterId = model.ChapterId,
+                    CStartDate = model.CStartDate,
+                    CEndDate = model.CEndDate,
+                    EduYearId = model.EduYearId,
+                    Chapter = model.Chapter,
+                    EduYear = model.EduYear,
+                    TeacherChapterDate = model.TeacherChapterDate
+                };
+
                 bool Exists = _db.ChapterDates.Any(d => d.ChapterId == model.ChapterId);
                 if (!Exists)
                 {
-                    _db.ChapterDates.Add(model);
+                    _db.ChapterDates.Add(chapterDate);
                     _db.SaveChanges();
                 }
                 else
                 {
-                    _db.Entry(model).State = EntityState.Modified;
+                    _db.Entry(chapterDate).State = EntityState.Modified;
                     _db.SaveChanges();
                 }
                 return Json("");
+            }
+            else
+            {
+                return Json("Model is not valid.");
+            }
+
+        }
+
+
+        //SubmitChapterTeaching
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult SubmitChapterTeaching([Bind(Include = "ChapterId,EduYearId,chapterTeachings")] ChapterDateAndTeaching model)
+        {
+            if (!LoginStatus())
+                return RedirectToAction("Login", "Admins", null);
+
+            if (ModelState.IsValid)
+            {
+                if (model.chapterTeachings != null)
+                {
+                    foreach (var item in model.chapterTeachings)
+                    {
+                        bool Exists = _db.ChapterTeachings.Any(d => d.ChapterId == model.ChapterId && d.TeachingTypeId == item.TeachingTypeId);
+
+                        ChapterTeaching model2 = new ChapterTeaching()
+                        {
+                            Chapter = item.Chapter,
+                            ChapterId = model.ChapterId,
+                            ChapterTeachingId = item.ChapterTeachingId,
+                            EduYear = item.EduYear,
+                            EduYearId = model.EduYearId,
+                            MaxVal = item.Status == true ? item.MaxVal : 0,
+                            MinVal = item.Status == true ? item.MinVal : 0,
+                            OrderId = item.OrderId,
+                            Status = item.Status,
+                            TeachingType = _db.TeachingTypes.Find(item.TeachingTypeId),
+                            TeachingTypeId = item.TeachingTypeId
+                        };
+
+                        if (!Exists)
+                        {
+                            _db.ChapterTeachings.Add(model2);
+                        }
+                        else
+                        {
+                            _db.Entry(model2).State = EntityState.Modified;
+                        }
+                        _db.SaveChanges();
+                    }
+                    return Json("");
+                }
+                else
+                {
+                    return Json("Model is not valid.");
+                }
             }
             else
             {

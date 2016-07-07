@@ -1,4 +1,4 @@
-﻿@model EduExamine.Models.ChapterDate
+﻿@model EduExamine.Models.ChapterDateAndTeaching
 
 @{
     ViewBag.Title = "Add New";
@@ -10,11 +10,84 @@
 }
 <div class="container-start">
     <div class="row">
-        @if (Model.EduYearId <= 0)
+        @if (Model.EduYearId != 0)
         {
             <div class="col-md-12">
                 <h5 style="font-weight:normal; font-family:'Century Gothic';">
-                   Chapter Date 
+                    @Html.ActionLink("Chapter Date & Teachings", "ChapterDisplay", new { id = Model.Chapter.SubjectId })
+                </h5>
+            </div>
+            <div class="col-md-12">
+                <div class="col-md-12 bg-info" style="padding:10px;">
+                    <div class="col-md-3">START DATE: @Model.CStartDate.ToString("dd - MMM - yyyy")</div>
+                    <div class="col-md-3">END DATE: @Model.CEndDate.ToString("dd - MMM - yyyy")</div>
+                    <div class="col-md-3 text-center"><b>@Model.CEndDate.Subtract(Model.CStartDate).TotalDays </b>days required to complete</div>
+                    <div class="col-md-3 text-right">
+                        @Html.ActionLink("Change", "SettingsDisplay", new { id = Model.ChapterId, eduyearid = 0 })
+                    </div>
+                </div>
+            </div>
+           
+            <div class="col-md-12 top-twenty">
+                @using (Ajax.BeginForm("SubmitChapterTeaching", new AjaxOptions { }))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.HiddenFor(d => d.ChapterId)
+                    @Html.HiddenFor(d => d.EduYearId)
+                <div class="col-md-12 bg-info" style="padding:5px; padding-left:10px;">
+                    Setup Teaching Marks
+                </div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <td>Required</td>
+                            <td>Display</td>
+                            <td>Name</td>
+                            <td>Max</td>
+                            <td>Min</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (int i = 0; i < Model.chapterTeachings.Count(); i++)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.EditorFor(model => model.chapterTeachings[i].Status)
+                                    @Html.HiddenFor(model => model.chapterTeachings[i].TeachingTypeId)
+                                    @Html.HiddenFor(model => model.chapterTeachings[i].ChapterTeachingId)
+                                    @Html.HiddenFor(mode => Model.chapterTeachings[i].OrderId)
+                                    @Html.HiddenFor(mode=> Model.chapterTeachings[i].TeachingType.Name)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(model => model.chapterTeachings[i].OrderId)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(model => model.chapterTeachings[i].TeachingType.Name)
+                                </td>
+                                <td>
+                                    @Html.EditorFor(model => model.chapterTeachings[i].MaxVal, new { htmlAttributes = new { @min = 0, @placeholder = "0", @onkeyup="checkMaxvalue(this);" } })
+                                </td>
+                                <td>
+                                    @Html.EditorFor(model => model.chapterTeachings[i].MinVal, new { htmlAttributes = new { @min = 0, @placeholder = "0", @onkeyup = "checkMinvalue(this);" } })
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                <div class="col-md-12 text-right bg-success" style="padding:5px;">
+                    <input id="submitChapterTeaching" disabled="disabled" type="button" value="Submit" onclick="submitUniversal(this, '@Url.Action("ChapterDisplay", "Classes", new { id = Model.Chapter.SubjectId })')" class="btn btn-success" />
+                    <a href="@Url.Action("ChapterDisplay", "Classes", new { id = Model.Chapter.SubjectId })" class="btn btn-default">
+                        Back
+                    </a>
+                </div>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="col-md-12">
+                <h5 style="font-weight:normal; font-family:'Century Gothic';">
+                    Chapter Date
                 </h5>
             </div>
             <div class="col-md-12 top-twenty">
@@ -43,7 +116,7 @@
                         @Html.ValidationMessageFor(model => model.EduYearId, "", new { @class = "text-danger form-control-feedback" })
                     </div>
                     <div class="form-group text-right">
-                        <input id="submit" type="button" value="Save" onclick="submitUniversal(this, '@Url.Action("ChapterDisplay", "Classes", new { id = Model.Chapter.SubjectId })')" class="btn btn-info" />
+                        <input id="submitChapterDate" type="button" value="Save" onclick="submitUniversal(this, '@Url.Action("ChapterDisplay", "Classes", new { id = Model.Chapter.SubjectId })')" class="btn btn-info" />
                         <a href="@Url.Action("ChapterDisplay", "Classes", new { id = Model.Chapter.SubjectId })" class="btn btn-default">
                             Back
                         </a>
@@ -51,24 +124,47 @@
                 }
             </div>
         }
-        else
-        {
-            <div class="col-md-12">
-                <h5 style="font-weight:normal; font-family:'Century Gothic';">
-                    @Html.ActionLink("Chapter Date & Teachings", "ChapterDisplay", new { id = Model.Chapter.SubjectId })
-                </h5>
-            </div>
-            <div class="col-md-12">
-                <div class="col-md-12 newBox">
-                    <div class="col-md-2 text-right">START DATE: </div>
-                    <div class="col-md-2">@Model.CStartDate.ToString("dd - MMM - yyyy")</div>
-                    <div class="col-md-2 text-right">END DATE: </div>
-                    <div class="col-md-2">@Model.CEndDate.ToString("dd - MMM - yyyy")</div>
-                </div>
-                <div class="col-md-12 text-center">
-                    @Model.CEndDate.Subtract(Model.CStartDate).TotalDays days need to be completed
-                </div>
-            </div>
-        }
     </div>
 </div>
+
+@section scripts
+{
+    <script>
+        function checkMaxvalue(txtMax)
+        {
+            var txtMin = "#" + txtMax.id.replace('MaxVal', 'MinVal');
+
+            var MaxVal, MinVal;
+            MinVal = parseInt($(txtMin).val());
+            MaxVal = parseInt($(txtMax).val());
+
+            if (MinVal > MaxVal) {
+                $(txtMin).addClass('bg-danger');
+                $('#submitChapterTeaching').attr('disabled','disabled');
+            }
+            else {
+                $(txtMin).removeClass('bg-danger');
+                $('#submitChapterTeaching').removeAttr('disabled');
+            }
+        }
+        function checkMinvalue(txtMin) {
+            var txtMax = "#" + txtMin.id.replace('MinVal', 'MaxVal');
+            var MaxVal, MinVal;
+            MinVal = parseInt($(txtMin).val());
+            MaxVal = parseInt($(txtMax).val());
+
+            if (MinVal > MaxVal) {
+                $(txtMin).addClass('bg-danger');
+                $('#submitChapterTeaching').attr('disabled', 'disabled');
+            }
+            else {
+                $(txtMin).removeClass('bg-danger');
+                $('#submitChapterTeaching').removeAttr('disabled');
+            }
+        }
+
+        $(document).ready(function () {
+
+    });
+    </script>
+}

@@ -1,0 +1,49 @@
+﻿@model IEnumerable<EduExamine.Models.TeachingType>
+
+@{
+    ViewBag.Title = "LIndex";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+@section Adminmenu
+{
+    @Html.Partial("~/Views/Shared/Adminmenu.cshtml")
+}
+<div class="container-start">
+    <div class="row">
+        <div class="col-md-12">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.First().OrderId)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.First().Name)
+                        </th>
+                        <th>
+                            @Html.ActionLink("+ Add", "Create")
+                        </th>
+                    </tr>
+                </thead>
+                <tbody id="searchResult">
+                    @foreach (var item in Model)
+                    {
+                        <tr style="padding:5px; background-color:#F1F1F1; border-bottom: solid 1px #d1d1d1;">
+                            <td>
+                                @Html.DisplayFor(modelItem => item.OrderId)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Name)
+                            </td>
+                            <td>
+                                @Html.ActionLink("Edit", "Edit", new { id = item.TeachingTypeId }) |
+                                @Html.ActionLink("Delete", "Delete", new { id = item.TeachingTypeId })
+                            </td>
+                        </tr>
+                    }
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
