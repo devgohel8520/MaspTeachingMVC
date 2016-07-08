@@ -1,4 +1,7 @@
 ﻿using EduExamine.Models;
+using PagedList;
+using System.Collections.Generic;
+using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
@@ -8,15 +11,111 @@ namespace EduExamine.Controllers
     {
         EduExamineContext _db;
         public HttpCookie userCookie;
-        public string AdminType;
+        public int? GetEduYearId;
 
         public HomeController()
         {
             _db = new EduExamineContext();
+            GetEduYearId = 0;
         }
         public ActionResult Index()
         {
-            return View();
+            if (!_db.EduYears.Any())
+                return RedirectToAction("Login", "Admins", null);
+
+            List<EduYear> model = _db.EduYears.ToList();
+            return View(model);
+        }
+
+        public ActionResult TeacherPerform(int? page, int? GetEduYearId, string search = null)
+        {
+            List<TeachersGraph> teacherGraphs = new List<TeachersGraph>();
+
+            if (!_db.EduYears.Any())
+                return RedirectToAction("Login", "Admins", null);
+
+            List<Teacher> teachersList = _db.Teachers.Where(d => d.EduYearId == GetEduYearId).ToList();
+
+            foreach (var teacher in teachersList)
+            {
+                List<TeacherSubject> lstTeacherSubject = _db.TeacherSubjects.Where(d => d.TeacherId == teacher.TeacherId).ToList();
+
+                int AllExamMarks, AllAvgMarks, TotalExamAvg;
+                AllExamMarks = AllAvgMarks = TotalExamAvg = 0;
+
+                foreach (var teacherSubject in lstTeacherSubject)
+                {
+                    ExamSubject lstexamSubjects = _db.ExamSubjects.Where(d => d.SubjectId == teacherSubject.SubjectId).FirstOrDefault();
+
+                    if (lstexamSubjects != null)
+                    {
+                        AllAvgMarks += lstexamSubjects.AvgMarks;
+                        AllExamMarks += lstexamSubjects.ExamMarks;
+                    }
+                }
+
+                if (AllAvgMarks != 0 && AllExamMarks != 0)
+                    TotalExamAvg = ((AllAvgMarks * 100) / AllExamMarks);
+
+                int AllMaxMarks, AllMarks, TotalTeaching;
+
+                AllMaxMarks = AllMarks = TotalTeaching = 0;
+
+                List<TeacherTeaching> teacherWeakNes = new List<TeacherTeaching>();
+
+                foreach (var teacherSubject in lstTeacherSubject)
+                {
+                    List<Chapter> lstChapters = _db.Chapters.Where(d => d.SubjectId == teacherSubject.SubjectId).ToList();
+                    foreach (var chapter in lstChapters)
+                    {
+                        List<TeacherTeaching> lstteacherTeaching = _db.TeacherTeachings.Where(d => d.ChapterId == chapter.ChapterId).ToList();
+                        foreach (var teacherTeaching in lstteacherTeaching)
+                        {
+                            AllMaxMarks += teacherTeaching.MaxVal;
+                            AllMarks += teacherTeaching.Marks;
+
+                            if (teacherTeaching.Marks < teacherTeaching.MinVal)
+                            {
+                                teacherTeaching.TeachingType = _db.TeachingTypes.Find(teacherTeaching.TeachingTypeId);
+                                teacherWeakNes.Add(teacherTeaching);
+                            }
+                        }
+                    }
+                }
+
+                if (AllMaxMarks != 0 && AllMarks != 0)
+                    TotalTeaching = ((AllMarks * 100) / AllMaxMarks);
+
+                int TotalMasterAvg = 0;
+
+                if ((TotalExamAvg + TotalTeaching) > 2)
+                    TotalMasterAvg = ((TotalExamAvg + TotalTeaching) / 2);
+
+                TeachersGraph graphModel = new TeachersGraph()
+                {
+                    RankId = 0,
+                    Teacher = teacher,
+                    EduYearId = (int)GetEduYearId,
+                    EduYears = _db.EduYears.Find(GetEduYearId),
+                    TeacheringAvg = TotalTeaching,
+                    ExamAvg = TotalExamAvg,
+                    TotalAvg = TotalMasterAvg,
+                    Speed = 0,
+                    WeakNess = teacherWeakNes
+                };
+                teacherGraphs.Add(graphModel);
+            }
+
+            int count = 1;
+            foreach (var item in teacherGraphs.OrderByDescending(d => d.TotalAvg))
+            {
+                item.WeakNess = item.WeakNess.GroupBy(d => d.TeachingTypeId).Select(x => x.First()).ToList();
+                item.RankId = count;
+                count += 1;
+            }
+
+
+            return View(teacherGraphs.ToPagedList(page ?? 1, 20));
         }
     }
 }

@@ -1,0 +1,67 @@
+﻿@using PagedList;
+@using PagedList.Mvc;
+@model IPagedList<EduExamine.Models.TeacherSubject>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+@section Adminmenu
+{
+    @Html.Partial("~/Views/Shared/Adminmenu.cshtml")
+}
+<div class="container-start">
+    <div class="row">
+        <div class="col-md-12 top_head">
+            <a href="@Url.Action("TIndex", "Teachers", null)" class="lnk lnk-default">
+                @Model.First().Teacher.FullName
+            </a>
+            <span class="glyphicon glyphicon-menu-right small"></span>
+            Subjects
+        </div>
+        <div class="col-md-12 text-left" title="Add New Subject">
+            <h5>
+                @Html.ActionLink("+ Add", "SubjectCreate", new { teacherid = @Model.First().Teacher.TeacherId })
+            </h5>
+        </div>
+
+        <div class="col-md-12">
+            @if (Model.First().SubjectId != 0)
+            {
+                foreach (var item in Model)
+                {
+                    <div class="col-lg-2 newBox" title="@item.Subject.SubjectName">
+                        <div class="row head">
+                            @item.Subject.SubjectName
+                        </div>
+                        <div class="row control">
+                            <div class="col-md-6 btntext" title="Add Subject">
+                                @Html.ActionLink("Chapters", "ChapterDisplay", new { id = item.TeacherSubjectId })
+                            </div>
+                            <div class="col-md-6 btntext" title="Remove Subject">
+                                @Html.ActionLink("Delete", "SubjectDelete", new { id = item.TeacherSubjectId })
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="col-lg-12 newBox" title="No records">
+                    <div class="row head" style="height:250px;">
+                        No subjects added to this selected class.<br /><br />
+                        <p style="font-size:11px;">
+                            Go to Class >> Subjects to Add subject.
+                        </p>
+                    </div>
+                    <div class="row control">
+
+                    </div>
+                </div>
+            }
+        </div>
+        <div class="col-md-12 text-center top-twenty">
+            @Html.PagedListPager(Model, page => Url.Action("SubjectDisplay", new { page }), new PagedListRenderOptions() { Display = PagedListDisplayMode.IfNeeded })
+        </div>
+    </div>
+</div>

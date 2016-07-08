@@ -1,0 +1,178 @@
+﻿@model EduExamine.Models.TeacherDateAndTeaching
+
+@{
+    ViewBag.Title = "Add New";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+@section Adminmenu
+{
+    @Html.Partial("~/Views/Shared/Adminmenu.cshtml")
+}
+<div class="container-start">
+    <div class="row">
+
+        <div class="col-md-12">
+            <h5 style="font-weight:normal; font-family:'Century Gothic';">
+                @Html.ActionLink("Chapter Date & Teaching Marks", "ChapterDisplay", new { id = Model.teachersubject.TeacherSubjectId })
+            </h5>
+        </div>
+        <div class="col-md-12">
+            <div class="alert-danger error-list">
+                <div id="errorD" style="padding:10px; margin-bottom:10px; display:none;">
+
+                </div>
+            </div>
+        </div>
+        @if (Model.TeacherChapterDateId == 0)
+        {
+            if (Model.ChapterDate != null)
+            {
+                <div class="col-md-12">
+                    <div class="col-md-12 bg-info" style="padding:10px;">
+                        <div class="col-md-3">START DATE: @Model.ChapterDate.CStartDate.ToString("dd - MMM - yyyy")</div>
+                        <div class="col-md-3">END DATE: @Model.ChapterDate.CEndDate.ToString("dd - MMM - yyyy")</div>
+                        <div class="col-md-4 text-center">Teacher should require to complete in <b>@Model.ChapterDate.CEndDate.Subtract(Model.ChapterDate.CStartDate).TotalDays </b>days</div>
+                    </div>
+                </div>
+                <div class="col-md-12 top-twenty">
+                    @using (Ajax.BeginForm("SettingsDisplay", new AjaxOptions { }))
+                    {
+                        <div class="alert-danger error-list">
+                            <div id="errorD" style="padding:10px; margin-bottom:20px; display:none;">
+                            </div>
+                        </div>
+                        @Html.AntiForgeryToken()
+                        @Html.HiddenFor(d => d.SubjectId)
+                        @Html.HiddenFor(d => d.ChapterDate.ChapterId)
+                        @Html.HiddenFor(d => d.TeacherId)
+                        <div class="form-group input-group input-group-lg">
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                            @Html.EditorFor(model => model.TCStartDate, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.TCStartDate, "", new { @class = "text-danger form-control-feedback" })
+                        </div>
+                        <div class="form-group input-group input-group-lg">
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                            @Html.EditorFor(model => model.TCEndDate, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.TCEndDate, "", new { @class = "text-danger form-control-feedback" })
+                        </div>
+                        <div class="form-group text-right">
+                            <input id="submitChapterDate" type="button" value="Save" onclick="submitUniversal(this, '@Url.Action("ChapterDisplay", "Teachers", new { id = Model.teachersubject.TeacherSubjectId })')" class="btn btn-info" />
+                            <a href="@Url.Action("ChapterDisplay", "Teachers", new { id = Model.teachersubject.TeacherSubjectId })" class="btn btn-default">
+                                Back
+                            </a>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="col-md-12">
+                    <div class="col-lg-12 newBox" title="No records">
+                        <div class="row head" style="height:250px;">
+                            No chapter date added to this selected chapter.<br /><br />
+                            <p style="font-size:11px;">
+                                Go to Class >> Subject >> Chapters to Add chapter date.
+                            </p>
+                        </div>
+                        <div class="row control">
+
+                        </div>
+                    </div>
+                </div>
+
+            }
+        }
+        else
+        {
+            <div class="col-md-12">
+                <div class="col-md-12 bg-success" style="padding:10px;">
+                    <div class="col-md-3">START DATE: @Model.TCStartDate.ToString("dd - MMM - yyyy")</div>
+                    <div class="col-md-3">END DATE: @Model.TCEndDate.ToString("dd - MMM - yyyy")</div>
+                    <div class="col-md-4 text-center">Teacher required <b>@Model.TCEndDate.Subtract(Model.TCStartDate).TotalDays/@Model.ChapterDate.CEndDate.Subtract(Model.ChapterDate.CStartDate).TotalDays </b>days</div>
+                    <div class="col-md-2 text-right">
+                        @Html.ActionLink("Change", "SettingsDisplay", new { id = Model.TeacherChapterDateId, eduyearid = 0, subjectid = Model.SubjectId })
+                    </div>
+                </div>
+                <div class="top-twenty">
+                    @using (Ajax.BeginForm("SubmitTeacherTeaching", new AjaxOptions { }))
+                    {
+                        @Html.AntiForgeryToken()
+                        <div class="col-md-12 bg-info text-center" style="padding:10px; padding-left:10px;">
+                            Setup Teaching Marks
+                        </div>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <td>Display</td>
+                                    <td>Name</td>
+                                    <td>Max</td>
+                                    <td>Min</td>
+                                    <td>Marks</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @for (int i = 0; i < Model.teacherTeachings.Count(); i++)
+                                {
+                                    @Html.HiddenFor(model => model.teacherTeachings[i].TeachingTypeId)
+                                    @Html.HiddenFor(model => model.teacherTeachings[i].TeacherTeachingId)
+                                    @Html.HiddenFor(mode => Model.teacherTeachings[i].OrderId)
+                                    @Html.HiddenFor(mode => Model.teacherTeachings[i].ChapterId)
+                                    @Html.HiddenFor(mode => Model.teacherTeachings[i].MaxVal)
+                                    @Html.HiddenFor(mode => Model.teacherTeachings[i].MinVal)
+                                    @Html.HiddenFor(mode => Model.teacherTeachings[i].Chapter)
+                                    @Html.HiddenFor(model => model.ChapterDate)
+                                    <tr>
+                                        <td>
+                                            @Html.DisplayFor(model => model.teacherTeachings[i].OrderId)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(model => model.teacherTeachings[i].TeachingType.Name)
+                                        </td>
+                                        <td>
+                                            @Html.EditorFor(model => model.teacherTeachings[i].MaxVal, new { htmlAttributes = new { @disabled = "disabled" } })
+                                        </td>
+                                        <td>
+                                            @Html.EditorFor(model => model.teacherTeachings[i].MinVal, new { htmlAttributes = new { @disabled = "disabled" } })
+                                        </td>
+                                        <td>
+                                            @Html.EditorFor(model => model.teacherTeachings[i].Marks, new { htmlAttributes = new { } })
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                        <div class="col-md-12 text-right bg-success" style="padding:5px;">
+                            <input id="submitTeaching" type="button" value="Save" onclick="submitUniversal(this, '@Url.Action("ChapterDisplay", "Teachers", new { id = Model.teachersubject.TeacherSubjectId })')" class="btn btn-info" />
+                            <a href="@Url.Action("ChapterDisplay", "Teachers", new { id = Model.teachersubject.TeacherSubjectId })" class="btn btn-default">
+                                Back
+                            </a>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@section scripts
+{
+    <script>
+        function checkMaxvalue(txtMax) {
+            var txtMin = "#" + txtMax.id.replace('MaxVal', 'MinVal');
+
+            var MaxVal, MinVal;
+            MinVal = parseInt($(txtMin).val());
+            MaxVal = parseInt($(txtMax).val());
+
+            if (MinVal > MaxVal) {
+                $(txtMin).addClass('bg-danger');
+                $('#submitChapterTeaching').attr('disabled', 'disabled');
+            }
+            else {
+                $(txtMin).removeClass('bg-danger');
+                $('#submitChapterTeaching').removeAttr('disabled');
+            }
+        }
+
+    </script>
+}

@@ -48,6 +48,21 @@
                 </div>
             }
             }
+            else
+            {
+                    <div class="col-lg-12 newBox" title="No records">
+                        <div class="row head" style="height:250px;">
+                            No subjects added to @Model.First().Classes.ClassName. <br />
+                            <br />
+                            <p style="font-size:11px;">
+                                Click on add link to add new subject
+                            </p>
+                        </div>
+                        <div class="row control">
+
+                        </div>
+                    </div>
+            }
         </div>
         <div class="col-md-12 text-center top-twenty">
             @Html.PagedListPager(Model, page => Url.Action("SubjectDisplay", new { page }), new PagedListRenderOptions() { Display = PagedListDisplayMode.IfNeeded })

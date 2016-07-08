@@ -13,80 +13,60 @@
 
 <div class="container-start">
 
-    <div class="row">
+    @*<div class="row">
         <div class="col-md-12">
             @Html.Partial("~/Views/Teachers/_HomeMenu.cshtml", Model)
+        </div>
+    </div>*@
+    <div class="row">
+        <div class="col-md-12 text-left" title="Add New Teacher">
+            <h5>
+                @Html.ActionLink("+ Add New", "Create", new { menuId = (int)Model.First().Types })
+            </h5>
         </div>
     </div>
     <div class="row">
         <div class="col-md-12">
             @if (Model.First().FullName != "")
             {
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>
-                                @Html.DisplayNameFor(model => model.First().FullName)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.First().LoginName)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.First().Types)
-                            </th>
-                            <th class="text-right">
-                                @Html.ActionLink("+ Add", "Create", new { menuid = (int)Model.First().Types })
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody id="searchResult">
-                        @foreach (var item in Model)
-                        {
-                            <tr style="padding:5px; background-color:#F1F1F1; border-bottom: solid 1px #d1d1d1;">
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.FullName)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.LoginName)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Types)
-                                </td>
-                                <td class="text-right">
-                                    @Html.ActionLink("Edit", "Edit", new { menuid = (int)item.Types, teacherid = item.TeacherId })
-                                    <text> | </text>
-                                    @Html.ActionLink("Delete", "Delete", new { menuid = (int)item.Types, teacherid = item.TeacherId })
-
-                                </td>
-
-                            </tr>
-                        }
-
-                    </tbody>
-                </table>
+                
+                foreach (var item in Model)
+                {
+                    <div class="col-lg-2 newBox" style=" text-align: center;" title="@item.FullName">
+                        <div class="row head">
+                            @item.FullName
+                        </div>
+                        <div class="row head" style=" text-align: center;" title="subject added">
+                            @item.TeacherSubjects.Count()
+                        </div>
+                        <div class="row control">
+                            <div class="col-md-4 btntext" title="Add Subject">
+                                @Html.ActionLink("Subjects", "SubjectDisplay", new { id = item.TeacherId })
+                            </div>
+                            <div class="col-md-4 btntext" title="Change Teacher inforamtion">
+                                @Html.ActionLink("Edit", "Edit", new { id = item.TeacherId })
+                            </div>
+                            <div class="col-md-4 btntext" title="Remove Teacher">
+                                @Html.ActionLink("Delete", "Delete", new { id = item.TeacherId })
+                            </div>
+                        </div>
+                    </div>
+                }
             }
             else
             {
-                <table class="table">
-                    <tr>
-                        <th>
-                            @Html.DisplayNameFor(model => model.First().FullName)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.First().LoginName)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.First().Types)
-                        </th>
-                        <th class="text-right">
-                            @Html.ActionLink("+ Add", "Create", new { menuId = (int)Model.First().Types })
-                        </th>
-                    </tr>
-                </table>
+                <div class="col-lg-12 newBox" title="No records">
+                    <div class="row head" style="height:250px;">
+                        Click to add new Teacher
+                    </div>
+                    <div class="row control">
+                        
+                    </div>
+                </div>
             }
         </div>
         <div class="col-md-12 text-center">
-            @Html.PagedListPager(Model, page => Url.Action("TIndex", new { page }), new PagedListRenderOptions() { Display = PagedListDisplayMode.IfNeeded})
+            @Html.PagedListPager(Model, page => Url.Action("TIndex", new { page }), new PagedListRenderOptions() { Display = PagedListDisplayMode.IfNeeded })
         </div>
     </div>
 </div>

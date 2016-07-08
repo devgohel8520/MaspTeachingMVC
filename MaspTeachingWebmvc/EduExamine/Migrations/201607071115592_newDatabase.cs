@@ -3,7 +3,7 @@ namespace EduExamine.Migrations
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class EduScripts : DbMigration
+    public partial class newDatabase : DbMigration
     {
         public override void Up()
         {
@@ -12,8 +12,8 @@ namespace EduExamine.Migrations
                 c => new
                     {
                         AdminId = c.Long(nullable: false, identity: true),
-                        Name = c.String(),
-                        Password = c.String(),
+                        Name = c.String(nullable: false),
+                        Password = c.String(nullable: false),
                         Types = c.Int(nullable: false),
                     })
                 .PrimaryKey(t => t.AdminId);
@@ -22,15 +22,15 @@ namespace EduExamine.Migrations
                 "dbo.ChapterDates",
                 c => new
                     {
-                        ChapterDateId = c.Long(nullable: false),
+                        ChapterId = c.Long(nullable: false),
                         CStartDate = c.DateTime(nullable: false),
                         CEndDate = c.DateTime(nullable: false),
                         EduYearId = c.Int(nullable: false),
                     })
-                .PrimaryKey(t => t.ChapterDateId)
-                .ForeignKey("dbo.Chapters", t => t.ChapterDateId)
+                .PrimaryKey(t => t.ChapterId)
+                .ForeignKey("dbo.Chapters", t => t.ChapterId)
                 .ForeignKey("dbo.EduYears", t => t.EduYearId, cascadeDelete: true)
-                .Index(t => t.ChapterDateId)
+                .Index(t => t.ChapterId)
                 .Index(t => t.EduYearId);
             
             CreateTable(
@@ -38,7 +38,7 @@ namespace EduExamine.Migrations
                 c => new
                     {
                         ChapterId = c.Long(nullable: false, identity: true),
-                        ChapterName = c.String(),
+                        ChapterName = c.String(nullable: false),
                         SubjectId = c.Long(nullable: false),
                     })
                 .PrimaryKey(t => t.ChapterId)
@@ -56,6 +56,7 @@ namespace EduExamine.Migrations
                         MinVal = c.Int(nullable: false),
                         EduYearId = c.Int(nullable: false),
                         ChapterId = c.Long(nullable: false),
+                        Status = c.Boolean(nullable: false),
                     })
                 .PrimaryKey(t => t.ChapterTeachingId)
                 .ForeignKey("dbo.Chapters", t => t.ChapterId, cascadeDelete: true)
@@ -70,7 +71,7 @@ namespace EduExamine.Migrations
                 c => new
                     {
                         EduYearId = c.Int(nullable: false, identity: true),
-                        EduYearName = c.String(),
+                        EduYearName = c.String(nullable: false),
                         EduStart = c.DateTime(nullable: false),
                         EduEnd = c.DateTime(nullable: false),
                     })
@@ -81,7 +82,7 @@ namespace EduExamine.Migrations
                 c => new
                     {
                         ExamId = c.Long(nullable: false, identity: true),
-                        ExamName = c.String(),
+                        ExamName = c.String(nullable: false),
                         EduYearId = c.Int(nullable: false),
                     })
                 .PrimaryKey(t => t.ExamId)
@@ -109,7 +110,7 @@ namespace EduExamine.Migrations
                 c => new
                     {
                         SubjectId = c.Long(nullable: false, identity: true),
-                        SubjectName = c.String(),
+                        SubjectName = c.String(nullable: false),
                         ClassesId = c.Long(nullable: false),
                     })
                 .PrimaryKey(t => t.SubjectId)
@@ -121,7 +122,7 @@ namespace EduExamine.Migrations
                 c => new
                     {
                         ClassesId = c.Long(nullable: false, identity: true),
-                        ClassName = c.String(),
+                        ClassName = c.String(nullable: false),
                     })
                 .PrimaryKey(t => t.ClassesId);
             
@@ -144,9 +145,9 @@ namespace EduExamine.Migrations
                 c => new
                     {
                         TeacherId = c.Long(nullable: false, identity: true),
-                        FullName = c.String(),
-                        LoginName = c.String(),
-                        Password = c.String(),
+                        FullName = c.String(nullable: false),
+                        LoginName = c.String(nullable: false),
+                        Password = c.String(nullable: false),
                         Types = c.Int(nullable: false),
                         EduYearId = c.Int(nullable: false),
                     })
@@ -159,7 +160,7 @@ namespace EduExamine.Migrations
                 c => new
                     {
                         TeachingTypeId = c.Int(nullable: false, identity: true),
-                        Name = c.String(),
+                        Name = c.String(nullable: false),
                         OrderId = c.Int(nullable: false),
                     })
                 .PrimaryKey(t => t.TeachingTypeId);
@@ -204,7 +205,7 @@ namespace EduExamine.Migrations
             DropForeignKey("dbo.TeacherChapterDates", "TeacherId", "dbo.Teachers");
             DropForeignKey("dbo.TeacherChapterDates", "TeacherChapterDateId", "dbo.ChapterDates");
             DropForeignKey("dbo.ChapterDates", "EduYearId", "dbo.EduYears");
-            DropForeignKey("dbo.ChapterDates", "ChapterDateId", "dbo.Chapters");
+            DropForeignKey("dbo.ChapterDates", "ChapterId", "dbo.Chapters");
             DropForeignKey("dbo.Chapters", "SubjectId", "dbo.Subjects");
             DropForeignKey("dbo.ChapterTeachings", "TeachingTypeId", "dbo.TeachingTypes");
             DropForeignKey("dbo.TeacherTeachings", "TeachingTypeId", "dbo.TeachingTypes");
@@ -234,7 +235,7 @@ namespace EduExamine.Migrations
             DropIndex("dbo.ChapterTeachings", new[] { "TeachingTypeId" });
             DropIndex("dbo.Chapters", new[] { "SubjectId" });
             DropIndex("dbo.ChapterDates", new[] { "EduYearId" });
-            DropIndex("dbo.ChapterDates", new[] { "ChapterDateId" });
+            DropIndex("dbo.ChapterDates", new[] { "ChapterId" });
             DropTable("dbo.TeacherChapterDates");
             DropTable("dbo.TeacherTeachings");
             DropTable("dbo.TeachingTypes");

@@ -46,11 +46,6 @@
                     <span class="input-group-addon"><i class="glyphicon glyphicon-star"></i></span>
                     <input type="password" id="CPassword" name="CPassword" class="form-control" placeholder="CONFIRM PASSWORD" />
                 </div>
-                <div class="form-group input-group input-group-lg">
-                    <span class="input-group-addon"><i class="glyphicon glyphicon-star"></i></span>
-                    @Html.DropDownList("EduYearId", null, htmlAttributes: new { @class = "form-control" })
-                    @Html.ValidationMessageFor(model => model.EduYearId, "", new { @class = "text-danger form-control-feedback" })
-                </div>
                 <div class="form-group text-right">
                     <input id="submit" type="button" disabled="disabled" value="Edit" onclick="submitUniversal(this, '@Url.Action("TIndex", "Teachers", new { menuId = (int)Model.Types })');" class="btn btn-success" />
                     <a href="@Url.Action("TIndex", "Teachers", new { menuId = (int)Model.Types })" class="btn btn-default">

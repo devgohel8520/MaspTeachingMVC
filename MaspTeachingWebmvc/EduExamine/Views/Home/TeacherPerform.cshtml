@@ -1,0 +1,79 @@
+﻿@using PagedList;
+@using PagedList.Mvc;
+@model IPagedList<EduExamine.Models.TeachersGraph>
+@{
+    ViewBag.Title = "Maps Edu Examine";
+}
+<div class="container-start">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="col-md-12 bg-success" style="padding:10px;">
+               <span class="glyphicon glyphicon-calendar"></span>  @Model.First().EduYears.EduStart.ToString("dd - MMM - yyyy") <b>To</b> @Model.First().EduYears.EduEnd.ToString("dd - MMM -yyyy")
+            </div>
+        </div>
+        <div class="col-md-12">
+            <table class="table">
+                <thead>
+                    <tr style="font-weight:normal; background-color:#F5F5F5;">
+                        <th>
+                            Rank
+                        </th>
+                        <th>
+                            Teacher
+                        </th>
+                        <th>
+                            Exam(%)
+                        </th>
+                        <th>
+                            Teaching(%)
+                        </th>
+                        <th>
+                            Total(%)
+                        </th>
+                        <th>
+                            Speed
+                        </th>
+                        <th>
+                            Weakness
+                        </th>
+                    </tr>
+                </thead>
+                <tbody id="searchResult">
+                    @foreach (var item in Model)
+                    {
+                        <tr style="padding:5px; background-color:#F1F1F1; border-bottom: solid 1px #d1d1d1;">
+                            <td>
+                                @Html.DisplayFor(modelItem => item.RankId)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Teacher.FullName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ExamAvg)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.TeacheringAvg)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.TotalAvg)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Speed)
+                            </td>
+                            <td>
+                                @foreach (var weakness in item.WeakNess)
+                                {
+                                    @Html.DisplayFor(items => weakness.TeachingType.Name)
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-12 text-center">
+            @Html.PagedListPager(Model, page => Url.Action("TeacherPerform", new { page }), new PagedListRenderOptions() { Display = PagedListDisplayMode.IfNeeded })
+        </div>
+    </div>
+</div>
+

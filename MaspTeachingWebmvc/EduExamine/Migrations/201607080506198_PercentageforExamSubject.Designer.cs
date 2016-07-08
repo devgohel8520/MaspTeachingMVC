@@ -7,13 +7,13 @@ namespace EduExamine.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class Chapter : IMigrationMetadata
+    public sealed partial class PercentageforExamSubject : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(Chapter));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(PercentageforExamSubject));
         
         string IMigrationMetadata.Id
         {
-            get { return "201607051342057_Chapter"; }
+            get { return "201607080506198_PercentageforExamSubject"; }
         }
         
         string IMigrationMetadata.Source

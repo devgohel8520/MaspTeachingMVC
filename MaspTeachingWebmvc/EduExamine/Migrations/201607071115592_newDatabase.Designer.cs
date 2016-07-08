@@ -7,13 +7,13 @@ namespace EduExamine.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class EduScripts : IMigrationMetadata
+    public sealed partial class newDatabase : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(EduScripts));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(newDatabase));
         
         string IMigrationMetadata.Id
         {
-            get { return "201607040715559_EduScripts"; }
+            get { return "201607071115592_newDatabase"; }
         }
         
         string IMigrationMetadata.Source

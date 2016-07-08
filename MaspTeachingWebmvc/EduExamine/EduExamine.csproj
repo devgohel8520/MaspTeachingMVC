@@ -132,27 +132,20 @@
     <Compile Include="Controllers\AdminsController.cs" />
     <Compile Include="Controllers\ClassesController.cs" />
     <Compile Include="Controllers\EduYearsController.cs" />
+    <Compile Include="Controllers\ExamsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\TeachersController.cs" />
     <Compile Include="Controllers\TeachingTypesController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201607040715559_EduScripts.cs" />
-    <Compile Include="Migrations\201607040715559_EduScripts.Designer.cs">
-      <DependentUpon>201607040715559_EduScripts.cs</DependentUpon>
+    <Compile Include="Migrations\201607071115592_newDatabase.cs" />
+    <Compile Include="Migrations\201607071115592_newDatabase.Designer.cs">
+      <DependentUpon>201607071115592_newDatabase.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201607040853282_RequiredField.cs" />
-    <Compile Include="Migrations\201607040853282_RequiredField.Designer.cs">
-      <DependentUpon>201607040853282_RequiredField.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201607051342057_Chapter.cs" />
-    <Compile Include="Migrations\201607051342057_Chapter.Designer.cs">
-      <DependentUpon>201607051342057_Chapter.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201607061448309_StatusforChapterTEaching.cs" />
-    <Compile Include="Migrations\201607061448309_StatusforChapterTEaching.Designer.cs">
-      <DependentUpon>201607061448309_StatusforChapterTEaching.cs</DependentUpon>
+    <Compile Include="Migrations\201607080506198_PercentageforExamSubject.cs" />
+    <Compile Include="Migrations\201607080506198_PercentageforExamSubject.Designer.cs">
+      <DependentUpon>201607080506198_PercentageforExamSubject.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\EduExamineContext.cs" />
@@ -242,6 +235,18 @@
     <Content Include="Views\TeachingTypes\Delete.cshtml" />
     <Content Include="Views\TeachingTypes\Edit.cshtml" />
     <Content Include="Views\TeachingTypes\TTIndex.cshtml" />
+    <Content Include="Views\Teachers\SubjectDisplay.cshtml" />
+    <Content Include="Views\Teachers\SubjectCreate.cshtml" />
+    <Content Include="Views\Teachers\SubjectDelete.cshtml" />
+    <Content Include="Views\Teachers\ChapterDisplay.cshtml" />
+    <Content Include="Views\Teachers\SettingsDisplay.cshtml" />
+    <Content Include="Views\Exams\Create.cshtml" />
+    <Content Include="Views\Exams\Delete.cshtml" />
+    <Content Include="Views\Exams\Edit.cshtml" />
+    <Content Include="Views\Exams\EIndex.cshtml" />
+    <Content Include="Views\Exams\ClassDisplay.cshtml" />
+    <Content Include="Views\Exams\SubjectDisplay.cshtml" />
+    <Content Include="Views\Home\TeacherPerform.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -251,17 +256,11 @@
     <None Include="Project_Readme.html" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201607040715559_EduScripts.resx">
-      <DependentUpon>201607040715559_EduScripts.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201607071115592_newDatabase.resx">
+      <DependentUpon>201607071115592_newDatabase.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201607040853282_RequiredField.resx">
-      <DependentUpon>201607040853282_RequiredField.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201607051342057_Chapter.resx">
-      <DependentUpon>201607051342057_Chapter.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201607061448309_StatusforChapterTEaching.resx">
-      <DependentUpon>201607061448309_StatusforChapterTEaching.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201607080506198_PercentageforExamSubject.resx">
+      <DependentUpon>201607080506198_PercentageforExamSubject.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

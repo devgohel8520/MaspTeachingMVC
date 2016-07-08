@@ -21,7 +21,6 @@ namespace EduExamine.Controllers
         }
         public bool LoginStatus()
         {
-            UserStatus logInfo = new UserStatus();
             if (Request.Cookies["MapsUser"] != null)
             {
                 userCookie = HttpContext.Request.Cookies["MapsUser"];

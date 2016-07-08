@@ -24,18 +24,8 @@ namespace EduExamine.Models
         public DbSet<TeacherTeaching> TeacherTeachings { get; set; }
         public DbSet<Exam> Exams { get; set; }
         public DbSet<ExamSubject> ExamSubjects { get; set; }
-
     }
 
-    public class UserStatus
-    {
-        public string FName { get; set; }
-        public string LName { get; set; }
-        public string Name { get; set; }
-        public string Types { get; set; }
-        public string Email { get; set; }
-        public bool Status { get; set; }
-    }
 
     public enum AdminType
     {
@@ -215,15 +205,18 @@ namespace EduExamine.Models
     {
         [ForeignKey("ChapterDate")]
         public long TeacherChapterDateId { get; set; }
+
         [Required(ErrorMessage = "*")]
         [ForeignKey("Teacher")]
         public long TeacherId { get; set; }
         public Teacher Teacher { get; set; }
 
         public ChapterDate ChapterDate { get; set; }
+
         [Required(ErrorMessage = "*")]
         [DataType(DataType.Date)]
         public DateTime TCStartDate { get; set; }
+
         [Required(ErrorMessage = "*")]
         [DataType(DataType.Date)]
         public DateTime TCEndDate { get; set; }
@@ -275,6 +268,7 @@ namespace EduExamine.Models
         public int AvgMarks { get; set; }
         [Required(ErrorMessage = "*")]
         public int ExamMarks { get; set; }
+        public int Percentages { get; set; }
         [Required(ErrorMessage = "*")]
         [ForeignKey("Exam")]
         public long ExamId { get; set; }

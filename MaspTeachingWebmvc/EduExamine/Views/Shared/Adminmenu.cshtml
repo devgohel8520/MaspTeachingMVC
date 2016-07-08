@@ -22,6 +22,7 @@
                 <li><a href="@Url.Action("EIndex", "Exams", null)">EXAM</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right" title="LOGOUT">
+                <li><a>@Request.Cookies["MapsUser"]["FromYear"].ToString()</a></li>
                 <li><a href="@Url.Action("Logout","Admins",null)">LOGOUT</a></li>
             </ul>
         </div>

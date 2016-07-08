@@ -1,0 +1,158 @@
+﻿@model EduExamine.Models.ExamsClassesSubjectViewModel
+
+@{
+    ViewBag.Title = Model.Exam.ExamName + " - Class";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+@section Adminmenu
+{
+    @Html.Partial("~/Views/Shared/Adminmenu.cshtml")
+}
+<div class="container-start">
+    <div class="row">
+        <div class="col-md-12 top_head" style="margin-bottom:10px;">
+            <a href="@Url.Action("EIndex", "Exams", null)" class="lnk lnk-default" title="Jump to exams">
+                @Model.Exam.ExamName
+            </a>
+            <span class="glyphicon glyphicon-menu-right small"></span>
+            <a href="@Url.Action("ClassDisplay", "Exams", new { id = Model.Exam.ExamId})" class="lnk lnk-default" title="Jump to class">
+                @Model.Classess.ClassName
+            </a>
+            <span class="glyphicon glyphicon-menu-right small"></span>
+            Subjects
+        </div>
+        <div class="col-md-12">
+            <div class="alert-danger error-list">
+                <div id="errorD" style="padding:10px; margin-bottom:20px; display:none;">
+
+                </div>
+            </div>
+            @if (Model.examSubjects.Count() != 0)
+            {
+                <div class="top-twenty">
+                    @using (Ajax.BeginForm("SubmitExamSubjectMarks", new AjaxOptions { }))
+                    {
+                        @Html.AntiForgeryToken()
+                        <div class="col-md-12 bg-info" style="padding:10px; padding-left:10px;">
+                            Setup Exam Marks
+                        </div>
+                        <table class="table">
+                            <thead>
+                                <tr style="background-color:#f5f5f5;">
+                                    <td>Subject</td>
+                                    <td>Avg Mark</td>
+                                    <td>Exam Mark</td>
+                                    <td>Percentage</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @for (int i = 0; i < Model.examSubjects.Count(); i++)
+                                {
+                                    @Html.HiddenFor(d => d.examSubjects[i].SubjectId)
+                                    @Html.HiddenFor(d => d.examSubjects[i].ExamId)
+                                    @Html.HiddenFor(d => d.examSubjects[i].ExamSubjectId)
+                                    <tr>
+                                        <td>
+                                            @Html.DisplayFor(model => model.examSubjects[i].Subject.SubjectName)
+                                        </td>
+                                        <td>
+                                            @Html.EditorFor(model => model.examSubjects[i].AvgMarks, new { htmlAttributes = new { @onkeyup = "calculatept(this);" } })
+                                        </td>
+                                        <td>
+                                            @Html.EditorFor(model => model.examSubjects[i].ExamMarks, new { htmlAttributes = new { @onkeyup = "calculatept(this);" } })
+                                        </td>
+                                        <td>
+                                            @Html.EditorFor(model => model.examSubjects[i].Percentages, new { htmlAttributes = new { @readonly = "true" } })
+                                        </td>
+                                    </tr>
+                                }
+                                <tr>
+                                    <td colspan="4">
+                                        <input type="button" id="btnCalculate" disabled="disabled" onclick="submitUniversal(this, '@Url.Action("SubjectDisplay", "Exams", new { id = Model.Classess.ClassesId ,examid = Model.Exam.ExamId })')" value="Calculate" class="btn btn-default col-md-12" title="Back to class">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <b>Total</b>
+                                    </td>
+                                    <td>
+                                        @Html.EditorFor(model => model.TotalAvg, new { htmlAttributes = new { @onkeyup = "calculatept(this);" } })
+                                    </td>
+                                    <td>
+                                        @Html.EditorFor(model => model.TotalMarks, new { htmlAttributes = new { @onkeyup = "calculatept(this);" } })
+                                    </td>
+                                    <td>
+                                        @Html.EditorFor(model => model.TotalPercentage, new { htmlAttributes = new { @readonly = "true" } })
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="col-md-12 text-right bg-success" style="padding:5px;">
+                            <input id="submitTeaching" disabled="disabled" type="button" title="Submit to save subjects marks" value="Submit" onclick="submitUniversal(this, '@Url.Action("ClassDisplay", "Exams", new { id = Model.Exam.ExamId })')" class="btn btn-info" />
+                            <a href="@Url.Action("ClassDisplay", "Exams", new { id = Model.Exam.ExamId })" class="btn btn-default" title="Back to class">
+                                Back
+                            </a>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="col-lg-12 newBox" title="No records">
+                    <div class="row head" style="height:250px;">
+                        No records related to @Model.Classess.ClassName
+                    </div>
+                    <div class="row control">
+
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    <script>
+        function calculatept(txtVal) {
+
+            var txtAvgMarks, txtExamMarks, txtPercentage;
+
+            if (txtVal.id.indexOf('AvgMarks') >= 0) {
+                txtAvgMarks = "#" + txtVal.id;
+                txtExamMarks = "#" + txtVal.id.replace('AvgMarks', 'ExamMarks');
+                txtPercentage = txtExamMarks.replace('ExamMarks', 'Percentages');
+            }
+            else {
+                txtExamMarks = "#" + txtVal.id;
+                txtAvgMarks = "#" + txtVal.id.replace('ExamMarks', 'AvgMarks');
+                txtPercentage = txtAvgMarks.replace('AvgMarks', 'Percentages');
+            }
+
+            if ($(txtAvgMarks).val() != '' && $(txtExamMarks).val() != '') {
+
+                var avgMarks, examMarks, percentage;
+                avgMarks = parseInt($(txtAvgMarks).val());
+                examMarks = parseInt($(txtExamMarks).val());
+
+
+                if (avgMarks > examMarks) {
+                    $(txtAvgMarks).addClass('bg-danger');
+                    $('#submitTeaching').attr('disabled', 'disabled');
+                    $('#btnCalculate').attr('disabled', 'disabled');
+                }
+                else {
+
+                    $(txtAvgMarks).removeClass('bg-danger');
+                    $('#submitTeaching').removeAttr('disabled');
+                    $('#btnCalculate').removeAttr('disabled');
+
+                    percentage = ((avgMarks * 100) / examMarks);
+                    $(txtPercentage).val(Math.floor(percentage));
+                }
+            }
+
+        }
+       
+    </script>
+}

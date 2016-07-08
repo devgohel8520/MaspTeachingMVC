@@ -24,7 +24,6 @@ namespace EduExamine.Controllers
 
         public bool LoginStatus()
         {
-            UserStatus logInfo = new UserStatus();
             if (Request.Cookies["MapsUser"] != null)
             {
                 userCookie = HttpContext.Request.Cookies["MapsUser"];
@@ -38,12 +37,13 @@ namespace EduExamine.Controllers
         {
             if (!LoginStatus())
                 return RedirectToAction("Login", "Admins", null);
-
             return View();
         }
 
         public ActionResult Login()
         {
+            ViewBag.EduYearId = new SelectList(_db.EduYears, "EduYearId", "EduYearName");
+
             if (LoginStatus())
             {
                 return Redirect("AdIndex");
@@ -56,7 +56,7 @@ namespace EduExamine.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Login([Bind(Include = "Name,Password,Types")] Admin model)
+        public ActionResult Login([Bind(Include = "Name,Password,Types,EduYearId")] AdminViewModel model)
         {
             try
             {
@@ -71,12 +71,15 @@ namespace EduExamine.Controllers
                         {
                             if (query.Types.Equals(model.Types))
                             {
+                                EduYear eduYear = _db.EduYears.Find(model.EduYearId);
+
                                 HttpCookie userInfo = new HttpCookie("MapsUser");
                                 userInfo.Expires = DateTime.Now.AddDays(1);
                                 userInfo.Values["UserId"] = query.AdminId.ToString();
                                 userInfo.Values["Email"] = query.Name;
-                                //userInfo.Values["Name"] = query.AdminProfile.FirstName.ToUpper() + " " + query.AdminProfile.LastName.ToUpper();
-                                userInfo.Values["Type"] = query.Types.ToString();
+                                userInfo.Values["Type"] = Convert.ToString(query.Types);
+                                userInfo.Values["EduYearId"] = Convert.ToString(model.EduYearId);
+                                userInfo.Values["FromYear"] = eduYear.EduStart.Year + "-" + eduYear.EduEnd.Year;
                                 Response.Cookies.Add(userInfo);
                                 return Json("");
                             }
