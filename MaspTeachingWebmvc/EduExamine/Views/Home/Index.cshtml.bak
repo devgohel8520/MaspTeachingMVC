@@ -1,0 +1,48 @@
+﻿@using PagedList;
+@using PagedList.Mvc;
+@model IEnumerable<EduExamine.Models.EduYear>
+
+@{
+    ViewBag.Title = "Year - Edu Examine";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+
+<div class="container-start">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="col-md-12 bg-success" style="padding:10px;">
+                List of Years Records
+            </div>
+        </div>
+        <div class="col-md-12" style="height:500px; margin-top:10px;">
+            @if (Model.First().EduYearName != "")
+            {
+
+                foreach (var item in Model)
+                {
+                    <div class="col-lg-2 newBox" style=" text-align: center;" title="@item.EduYearName">
+                        <div class="row" style="padding:15px;">
+                            @item.EduYearName
+                        </div>
+                        <div class="row control">
+                            <div class="col-md-12 btntext" title="Add Subject">
+                                @Html.ActionLink("Select", "TeacherPerform", new { GetEduYearId = item.EduYearId })
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="col-lg-12 newBox" title="No records">
+                    <div class="row head" style="height:250px;">
+                        No years added.
+                    </div>
+                    <div class="row control">
+
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>

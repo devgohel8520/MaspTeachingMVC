@@ -134,20 +134,13 @@
     <Compile Include="Controllers\EduYearsController.cs" />
     <Compile Include="Controllers\ExamsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\SubAdminController.cs" />
     <Compile Include="Controllers\TeachersController.cs" />
+    <Compile Include="Controllers\TeachingController.cs" />
     <Compile Include="Controllers\TeachingTypesController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201607071115592_newDatabase.cs" />
-    <Compile Include="Migrations\201607071115592_newDatabase.Designer.cs">
-      <DependentUpon>201607071115592_newDatabase.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201607080506198_PercentageforExamSubject.cs" />
-    <Compile Include="Migrations\201607080506198_PercentageforExamSubject.Designer.cs">
-      <DependentUpon>201607080506198_PercentageforExamSubject.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\EduExamineContext.cs" />
     <Compile Include="Models\ViewModelClass.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -170,6 +163,7 @@
     <Content Include="Content\bootstrap-theme.css.map" />
     <Content Include="Content\bootstrap.min.css.map" />
     <Content Include="Content\bootstrap.css.map" />
+    <None Include="Properties\PublishProfiles\mapsprofile.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
@@ -185,7 +179,9 @@
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\Site.js" />
     <Content Include="Scripts\_references.js" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
@@ -247,6 +243,15 @@
     <Content Include="Views\Exams\ClassDisplay.cshtml" />
     <Content Include="Views\Exams\SubjectDisplay.cshtml" />
     <Content Include="Views\Home\TeacherPerform.cshtml" />
+    <Content Include="Views\SubAdmin\Index.cshtml" />
+    <Content Include="Views\Shared\_SubAdminLayout.cshtml" />
+    <Content Include="Views\Shared\SubAdminMenu.cshtml" />
+    <Content Include="Views\Home\Years.cshtml" />
+    <Content Include="Views\Home\Error.cshtml" />
+    <Content Include="Views\Teaching\Index.cshtml" />
+    <Content Include="Views\Teaching\SubjectDisplay.cshtml" />
+    <Content Include="Views\Teaching\ChapterDisplay.cshtml" />
+    <Content Include="Views\Teaching\SettingsDisplay.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -254,14 +259,6 @@
   <ItemGroup>
     <Content Include="packages.config" />
     <None Include="Project_Readme.html" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Migrations\201607071115592_newDatabase.resx">
-      <DependentUpon>201607071115592_newDatabase.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201607080506198_PercentageforExamSubject.resx">
-      <DependentUpon>201607080506198_PercentageforExamSubject.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

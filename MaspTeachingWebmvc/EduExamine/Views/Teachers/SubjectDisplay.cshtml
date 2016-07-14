@@ -21,7 +21,7 @@
         </div>
         <div class="col-md-12 text-left" title="Add New Subject">
             <h5>
-                @Html.ActionLink("+ Add", "SubjectCreate", new { teacherid = @Model.First().Teacher.TeacherId })
+                @Html.ActionLink("+ Add", "SubjectCreate", new { id = @Model.First().Teacher.TeacherId })
             </h5>
         </div>
 
@@ -30,15 +30,15 @@
             {
                 foreach (var item in Model)
                 {
-                    <div class="col-lg-2 newBox" title="@item.Subject.SubjectName">
+                    <div class="col-lg-2 newBox" title="@item.Subject.SubjectName - @item.Subject.Classes.ClassName">
                         <div class="row head">
-                            @item.Subject.SubjectName
+                            @item.Subject.SubjectName <lbl style="font-size:11px;">@item.Subject.Classes.ClassName</lbl>
                         </div>
                         <div class="row control">
-                            <div class="col-md-6 btntext" title="Add Subject">
+                            @*<div class="col-md-6 btntext" title="Add Subject">
                                 @Html.ActionLink("Chapters", "ChapterDisplay", new { id = item.TeacherSubjectId })
-                            </div>
-                            <div class="col-md-6 btntext" title="Remove Subject">
+                            </div>*@
+                            <div class="col-md-12 btntext" title="Remove Subject">
                                 @Html.ActionLink("Delete", "SubjectDelete", new { id = item.TeacherSubjectId })
                             </div>
                         </div>

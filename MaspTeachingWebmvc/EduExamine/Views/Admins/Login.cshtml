@@ -32,11 +32,11 @@
                         @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control", @placeholder = "Password", @type = "password" } })
                         @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger form-control-feedback" })
                     </div>
-                    @*<div class="form-group input-group">
+                    <div class="form-group input-group">
                         <span class="input-group-addon"><i class="glyphicon glyphicon glyphicon-th-list"></i></span>
                         @Html.EnumDropDownListFor(model => model.Types, htmlAttributes: new { @class = "form-control" })
                         @Html.ValidationMessageFor(model => model.Types, "", new { @class = "text-danger form-control-feedback" })
-                    </div>*@
+                    </div>
                     <div class="form-group input-group">
                         <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
                         @Html.DropDownList("EduYearId", null, htmlAttributes: new { @class = "form-control" })

@@ -15,7 +15,7 @@ namespace EduExamine.Controllers
     {
         EduExamineContext _db;
         public HttpCookie userCookie;
-        public AdminType adminType;
+        public AdminType AdminType;
 
         public AdminsController()
         {
@@ -27,7 +27,7 @@ namespace EduExamine.Controllers
             if (Request.Cookies["MapsUser"] != null)
             {
                 userCookie = HttpContext.Request.Cookies["MapsUser"];
-                adminType = (AdminType)Enum.Parse(typeof(AdminType), userCookie["Type"], true);
+                AdminType = (AdminType)Enum.Parse(typeof(AdminType), userCookie["Type"], true);
                 return true;
             }
             return false;
@@ -37,11 +37,7 @@ namespace EduExamine.Controllers
         {
             if (!LoginStatus())
                 return RedirectToAction("Login", "Admins", null);
-
-            if (adminType.Equals(AdminType.Admin))
-                return View();
-            else
-                return RedirectToAction("Index", "SubAdmin", null);
+            return View();
         }
 
         public ActionResult Login()
@@ -94,7 +90,7 @@ namespace EduExamine.Controllers
                         }
                         else
                         {
-                            return Json("Incorrect login id or password.");
+                            return Json("Incorrect email id or password.");
                         }
 
                     }
@@ -120,9 +116,6 @@ namespace EduExamine.Controllers
         {
             if (!LoginStatus())
                 return RedirectToAction("Login", "Admins", null);
-
-            if (!adminType.Equals(AdminType.Admin))
-                return RedirectToAction("Index", "SubAdmin", null);
 
             if (menuId != null)
             {
@@ -169,9 +162,6 @@ namespace EduExamine.Controllers
             if (!LoginStatus())
                 return RedirectToAction("Login", "Admins", null);
 
-            if (!adminType.Equals(AdminType.Admin))
-                return RedirectToAction("Index", "SubAdmin", null);
-
             Admin admin = new Admin() { Types = (AdminType)menuId, AdminId = 0, Name = "" };
             return View(admin);
         }
@@ -209,9 +199,10 @@ namespace EduExamine.Controllers
             if (!LoginStatus())
                 return RedirectToAction("Login", "Admins", null);
 
-            if (!adminType.Equals(AdminType.Admin))
-                return RedirectToAction("Index", "SubAdmin", null);
-
+            if (AdminType != 0)
+            {
+                return RedirectToAction("AdIndexAdmin", "Admins", new { menuId = menuId });
+            }
             if (Adminid == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -236,7 +227,7 @@ namespace EduExamine.Controllers
             if (!LoginStatus())
                 return RedirectToAction("Login", "Admins", null);
 
-            if (adminType != 0)
+            if (AdminType != 0)
             {
                 return RedirectToAction("AdIndex", "Admins", null);
             }
@@ -254,8 +245,10 @@ namespace EduExamine.Controllers
             if (!LoginStatus())
                 return RedirectToAction("Login", "Admins", null);
 
-            if (!adminType.Equals(AdminType.Admin))
-                return RedirectToAction("Index", "SubAdmin", null);
+            if (AdminType != 0)
+            {
+                return RedirectToAction("AdIndex", "Admins", null);
+            }
 
             if (Adminid == null)
             {
@@ -277,7 +270,7 @@ namespace EduExamine.Controllers
             if (!LoginStatus())
                 return RedirectToAction("Login", "Admins", null);
 
-            if (adminType != 0)
+            if (AdminType != 0)
             {
                 return RedirectToAction("AdIndex", "Admins", null);
             }

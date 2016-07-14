@@ -1,7 +1,7 @@
 ﻿@model EduExamine.Models.ChapterDateAndTeaching
 
 @{
-    ViewBag.Title = "Add New";
+    ViewBag.Title = "Add Date & Teaching";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 @section Adminmenu
@@ -17,7 +17,7 @@
             </div>
         </div>
 
-        @if (Model.EduYearId != 0)
+        @if (!Model.CheckChapterDate)
         {
             <div class="col-md-12">
                 <h5 style="font-weight:normal; font-family:'Century Gothic';">
@@ -30,7 +30,7 @@
                     <div class="col-md-3">END DATE: @Model.CEndDate.ToString("dd - MMM - yyyy")</div>
                     <div class="col-md-3 text-center"><b>@Model.CEndDate.Subtract(Model.CStartDate).TotalDays </b>days required to complete</div>
                     <div class="col-md-3 text-right">
-                        @Html.ActionLink("Change", "SettingsDisplay", new { id = Model.ChapterId, eduyearid = 0 })
+                        @Html.ActionLink("Change", "SettingsDisplay", new { id = Model.ChapterId, checkChapterDate = false })
                     </div>
                 </div>
             </div>
@@ -40,7 +40,7 @@
                 {
                     @Html.AntiForgeryToken()
                     @Html.HiddenFor(d => d.ChapterId)
-                    @Html.HiddenFor(d => d.EduYearId)
+                    @Html.HiddenFor(d => d.CheckChapterDate)
                 <div class="col-md-12 bg-info" style="padding:5px; padding-left:10px;">
                     Setup Teaching Marks
                 </div>
@@ -48,7 +48,7 @@
                     <thead>
                         <tr>
                             <td>Required</td>
-                            <td>Display</td>
+                            <td>Serial No.</td>
                             <td>Name</td>
                             <td>Max</td>
                             <td>Min</td>
@@ -64,6 +64,7 @@
                                     @Html.HiddenFor(model => model.chapterTeachings[i].ChapterTeachingId)
                                     @Html.HiddenFor(mode => Model.chapterTeachings[i].OrderId)
                                     @Html.HiddenFor(mode=> Model.chapterTeachings[i].TeachingType.Name)
+                                    @Html.HiddenFor(mode => Model.chapterTeachings[i].ChapterId)
                                 </td>
                                 <td>
                                     @Html.DisplayFor(model => model.chapterTeachings[i].OrderId)
@@ -114,7 +115,7 @@
                         @Html.ValidationMessageFor(model => model.CEndDate, "", new { @class = "text-danger form-control-feedback" })
                     </div>
                     <div class="form-group text-right">
-                        <input id="submitChapterDate" type="button" value="Save" onclick="submitUniversal(this, '@Url.Action("ChapterDisplay", "Classes", new { id = Model.Chapter.SubjectId })')" class="btn btn-info" />
+                        <input id="submitChapterDate" type="button" value="Save" onclick="submitUniversal(this, '@Url.Action("SettingsDisplay", "Classes", new { id = Model.ChapterId })')" class="btn btn-info" />
                         <a href="@Url.Action("ChapterDisplay", "Classes", new { id = Model.Chapter.SubjectId })" class="btn btn-default">
                             Back
                         </a>

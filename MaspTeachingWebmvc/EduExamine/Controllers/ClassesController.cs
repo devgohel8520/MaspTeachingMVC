@@ -275,15 +275,23 @@ namespace EduExamine.Controllers
 
         [HttpPost, ActionName("SubjectDelete")]
         [ValidateAntiForgeryToken]
-        public ActionResult SubjectDeleteConfirmed(long id)
+        public ActionResult SubjectDeleteConfirmed([Bind(Include = "SubjectId")] Subject model)
         {
             if (!LoginStatus())
                 return RedirectToAction("Login", "Admins", null);
 
-            Subject subject = _db.Subjects.Find(id);
-            _db.Subjects.Remove(subject);
-            _db.SaveChanges();
-            return Json("");
+            Subject subject = _db.Subjects.Find(model.SubjectId);
+            if (subject != null)
+            {
+                _db.Subjects.Remove(subject);
+                _db.SaveChanges();
+                return Json("");
+            }
+            else
+            {
+                return Json("No record found.");
+            }
+
         }
 
         //Chapter Control of subject
@@ -297,7 +305,7 @@ namespace EduExamine.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var model = _db.Chapters.Include(d => d.Subject).Include(d => d.Subject.Classes).Where(d => d.SubjectId == id).OrderBy(d => d.ChapterId);
+            var model = _db.Chapters.Include(d => d.Subject).Include(d => d.Subject.Classes).Where(d => d.SubjectId == id && d.EduYearId == (int)GetEduYearId).OrderBy(d => d.ChapterId);
             if (model.Count() == 0)
             {
                 List<Chapter> chapList = new List<Chapter>();
@@ -314,14 +322,14 @@ namespace EduExamine.Controllers
                 return RedirectToAction("Login", "Admins", null);
 
             Subject subject = _db.Subjects.Find(SubjectId);
-            Chapter chapter = new Chapter() { SubjectId = subject.SubjectId, Subject = subject };
+            Chapter chapter = new Chapter() { SubjectId = subject.SubjectId, Subject = subject, EduYearId = (int)GetEduYearId };
 
             return View(chapter);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult ChapterCreate([Bind(Include = "ChapterName,SubjectId")] Chapter model)
+        public ActionResult ChapterCreate([Bind(Include = "ChapterName,SubjectId,EduYearId")] Chapter model)
         {
             if (!LoginStatus())
                 return RedirectToAction("Login", "Admins", null);
@@ -334,7 +342,7 @@ namespace EduExamine.Controllers
                     for (int i = 1; i <= noofChapter; i++)
                     {
                         model.ChapterName = "Chapter " + Convert.ToString(i);
-                        bool Exists = _db.Chapters.Any(d => d.ChapterName.Equals(model.ChapterName) && d.SubjectId.Equals(model.SubjectId));
+                        bool Exists = _db.Chapters.Any(d => d.ChapterName.Equals(model.ChapterName) && d.SubjectId.Equals(model.SubjectId) && d.EduYearId.Equals(model.EduYearId));
                         if (!Exists)
                         {
                             _db.Chapters.Add(model);
@@ -371,12 +379,12 @@ namespace EduExamine.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult ChapterEdit([Bind(Include = "ChapterId,ChapterName,SubjectId")] Chapter model)
+        public ActionResult ChapterEdit([Bind(Include = "ChapterId,ChapterName,SubjectId,EduYearId")] Chapter model)
         {
             if (!LoginStatus())
                 return RedirectToAction("Login", "Admins", null);
 
-            bool Exists = _db.Chapters.Any(d => d.ChapterName.Equals(model.ChapterName) && d.SubjectId.Equals(model.SubjectId));
+            bool Exists = _db.Chapters.Any(d => d.ChapterName.Equals(model.ChapterName) && d.SubjectId.Equals(model.SubjectId) && d.EduYearId.Equals(model.EduYearId));
             if (!Exists)
             {
                 if (ModelState.IsValid)
@@ -415,12 +423,12 @@ namespace EduExamine.Controllers
 
         [HttpPost, ActionName("ChapterDelete")]
         [ValidateAntiForgeryToken]
-        public ActionResult ChapterDeleteConfirmed(long id)
+        public ActionResult ChapterDeleteConfirmed([Bind(Include = "ChapterId")] Chapter model)
         {
             if (!LoginStatus())
                 return RedirectToAction("Login", "Admins", null);
 
-            Chapter chapter = _db.Chapters.Find(id);
+            Chapter chapter = _db.Chapters.Find(model.ChapterId);
             if (chapter != null)
             {
                 _db.Chapters.Remove(chapter);
@@ -434,7 +442,7 @@ namespace EduExamine.Controllers
         }
 
         //Chapter Subject
-        public ActionResult SettingsDisplay(int? id, int? eduyearid)
+        public ActionResult SettingsDisplay(int? id, bool checkChapterDate = true)
         {
             if (!LoginStatus())
                 return RedirectToAction("Login", "Admins", null);
@@ -445,46 +453,31 @@ namespace EduExamine.Controllers
             }
 
             ChapterDate chapterDate = _db.ChapterDates.Find(id);
+            chapterDate = (chapterDate == null) ? new ChapterDate() : chapterDate;
 
             ChapterDateAndTeaching model = new ChapterDateAndTeaching() { chapterTeachings = new List<ChapterTeaching>() };
 
-            if (chapterDate == null)
-            {
-                chapterDate = new ChapterDate();
-            }
 
-            if (eduyearid != null)
+            if (chapterDate.ChapterId == 0 || checkChapterDate != true)
             {
                 model.ChapterId = (long)id;
-                model.EduYearId = (int)eduyearid;
-                model.Chapter = _db.Chapters.Find(id);
-                return View(model);
-            }
-
-            if (model == null)
-            {
-                model.ChapterId = (long)id;
+                model.CheckChapterDate = true;
                 model.Chapter = _db.Chapters.Find(id);
                 return View(model);
             }
             else
             {
 
-                if (chapterDate.EduYearId == GetEduYearId)
-                {
-                    model.CEndDate = chapterDate.CEndDate;
-                    model.CStartDate = chapterDate.CStartDate;
-                    model.Chapter = chapterDate.Chapter;
-                    model.ChapterId = chapterDate.ChapterId;
-                    model.EduYear = chapterDate.EduYear;
-                    model.EduYearId = chapterDate.EduYearId;
-                    model.TeacherChapterDate = chapterDate.TeacherChapterDate;
-                    model.chapterTeachings = new List<ChapterTeaching>();
-                }
+                model.CEndDate = chapterDate.CEndDate;
+                model.CStartDate = chapterDate.CStartDate;
+                model.Chapter = _db.Chapters.Find(id);
+                model.ChapterId = chapterDate.ChapterId;
+                model.CheckChapterDate = false;
+                model.chapterTeachings = new List<ChapterTeaching>();
 
                 List<ChapterTeaching> lstChapterTeaching = new List<ChapterTeaching>();
 
-                lstChapterTeaching = _db.ChapterTeachings.Where(d => d.ChapterId == id && d.EduYearId == GetEduYearId).ToList();
+                lstChapterTeaching = _db.ChapterTeachings.Where(d => d.ChapterId == id).ToList();
 
                 var teachingType = _db.TeachingTypes.OrderBy(d => d.OrderId).ToList();
 
@@ -499,17 +492,14 @@ namespace EduExamine.Controllers
                         MinVal = findVal != null ? findVal.MinVal : 0,
                         MaxVal = findVal != null ? findVal.MaxVal : 0,
                         ChapterId = (long)id,
-                        EduYearId = model.EduYearId,
                         TeachingTypeId = item.TeachingTypeId,
                         ChapterTeachingId = findVal != null ? findVal.ChapterTeachingId : 0,
                         Chapter = model.Chapter,
-                        EduYear = model.EduYear,
                         TeachingType = item,
                         Status = findVal != null ? findVal.Status : false
                     };
                     model.chapterTeachings.Add(chapterTeaching);
                 }
-                //}
                 model.ChapterId = (long)id;
                 model.Chapter = _db.Chapters.Find(id);
                 return View(model);
@@ -533,10 +523,7 @@ namespace EduExamine.Controllers
                     ChapterId = model.ChapterId,
                     CStartDate = model.CStartDate,
                     CEndDate = model.CEndDate,
-                    EduYearId = (int)GetEduYearId,
                     Chapter = model.Chapter,
-                    EduYear = model.EduYear,
-                    TeacherChapterDate = model.TeacherChapterDate
                 };
 
                 bool Exists = _db.ChapterDates.Any(d => d.ChapterId == model.ChapterId);
@@ -581,8 +568,6 @@ namespace EduExamine.Controllers
                             Chapter = item.Chapter,
                             ChapterId = model.ChapterId,
                             ChapterTeachingId = item.ChapterTeachingId,
-                            EduYear = item.EduYear,
-                            EduYearId = (int)GetEduYearId,
                             MaxVal = item.Status == true ? item.MaxVal : 0,
                             MinVal = item.Status == true ? item.MinVal : 0,
                             OrderId = item.OrderId,

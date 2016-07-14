@@ -34,7 +34,7 @@
                         </div>
                         <div class="row control">
                             <div class="col-md-12 btntext">
-                                @Html.ActionLink("Settings", "SettingsDisplay", new { id = item.ChapterId, subjectid = item.SubjectId })
+                                @Html.ActionLink("Settings", "SettingsDisplay", new { id = item.ChapterId, subjectid = item.SubjectId, teacherid = Model.teacher.TeacherId  })
                             </div>
                         </div>
                     </div>

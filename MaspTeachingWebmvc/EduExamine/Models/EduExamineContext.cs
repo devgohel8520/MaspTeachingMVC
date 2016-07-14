@@ -50,10 +50,9 @@ namespace EduExamine.Models
         [DataType(DataType.Date)]
         public DateTime EduEnd { get; set; }
 
-        public ICollection<ChapterDate> ChapterDates { get; set; }
+        public ICollection<Chapter> Chapters { get; set; }
         public ICollection<Teacher> Teachers { get; set; }
         public ICollection<Exam> Exams { get; set; }
-        public ICollection<ChapterTeaching> ChapterTeachings { get; set; }
     }
 
     public class Admin
@@ -137,6 +136,10 @@ namespace EduExamine.Models
 
         public ChapterDate ChapterDate { get; set; }
 
+        [ForeignKey("EduYear")]
+        public int EduYearId { get; set; }
+        public EduYear EduYear { get; set; }
+
         public ICollection<ChapterTeaching> ChapterTeachings { get; set; }
         public ICollection<TeacherTeaching> TeacherTeachings { get; set; }
     }
@@ -154,12 +157,12 @@ namespace EduExamine.Models
 
         public Chapter Chapter { get; set; }
 
-        [Required(ErrorMessage = "*")]
-        [ForeignKey("EduYear")]
-        public int EduYearId { get; set; }
-        public EduYear EduYear { get; set; }
+        //[Required(ErrorMessage = "*")]
+        //[ForeignKey("EduYear")]
+        //public int EduYearId { get; set; }
+        //public EduYear EduYear { get; set; }
 
-        public TeacherChapterDate TeacherChapterDate { get; set; }
+        //public TeacherChapterDate TeacherChapterDate { get; set; }
     }
 
     public class ChapterTeaching
@@ -176,10 +179,10 @@ namespace EduExamine.Models
         [Required(ErrorMessage = "*")]
         public int MinVal { get; set; }
 
-        [Required(ErrorMessage = "*")]
-        [ForeignKey("EduYear")]
-        public int EduYearId { get; set; }
-        public EduYear EduYear { get; set; }
+        //[Required(ErrorMessage = "*")]
+        //[ForeignKey("EduYear")]
+        //public int EduYearId { get; set; }
+        //public EduYear EduYear { get; set; }
 
         [Required(ErrorMessage = "*")]
         [ForeignKey("Chapter")]
@@ -203,15 +206,14 @@ namespace EduExamine.Models
 
     public class TeacherChapterDate
     {
-        [ForeignKey("ChapterDate")]
-        public long TeacherChapterDateId { get; set; }
+        [Key, ForeignKey("Chapter")]
+        public long ChapterId { get; set; }
+        public Chapter Chapter { get; set; }
 
         [Required(ErrorMessage = "*")]
         [ForeignKey("Teacher")]
         public long TeacherId { get; set; }
         public Teacher Teacher { get; set; }
-
-        public ChapterDate ChapterDate { get; set; }
 
         [Required(ErrorMessage = "*")]
         [DataType(DataType.Date)]
@@ -273,6 +275,7 @@ namespace EduExamine.Models
         [ForeignKey("Exam")]
         public long ExamId { get; set; }
         public Exam Exam { get; set; }
+        public int EduYearId { get; set; }
     }
 
 }

@@ -117,7 +117,7 @@ namespace EduExamine.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "TeacherId,FullName,LoginName,Password,Types")] Teacher model)
+        public ActionResult Edit([Bind(Include = "TeacherId,FullName,LoginName,Password,Types,EduYearId")] Teacher model)
         {
             if (!LoginStatus())
                 return RedirectToAction("Login", "Admins", null);
@@ -132,7 +132,6 @@ namespace EduExamine.Controllers
             }
             return View(model);
         }
-
 
         public ActionResult Delete(long? id)
         {
@@ -151,24 +150,21 @@ namespace EduExamine.Controllers
             return View(model);
         }
 
-
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult DeletePConfirmed([Bind(Include = "TeacherId,Name")] Teacher model)
+        public ActionResult DeletePConfirmed(long? id)
         {
             if (!LoginStatus())
                 return RedirectToAction("Login", "Admins", null);
 
-            Teacher admin = _db.Teachers.Find(model.TeacherId);
+            Teacher admin = _db.Teachers.Find(id);
             _db.Teachers.Remove(admin);
             _db.SaveChanges();
             return Json("");
         }
 
-
         //Subject list of teacher
-
-        public ActionResult SubjectDisplay(int? page, int? id)
+        public ActionResult SubjectDisplay(int? page, long? id)
         {
             if (!LoginStatus())
                 return RedirectToAction("Login", "Admins", null);
@@ -177,7 +173,7 @@ namespace EduExamine.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var model = _db.TeacherSubjects.Include(d => d.Subject).Include(d => d.Teacher).Where(d => d.TeacherId == id).OrderBy(d => d.Subject.SubjectName);
+            var model = _db.TeacherSubjects.Include(d => d.Subject).Include(d => d.Subject.Classes).Include(d => d.Teacher).Where(d => d.TeacherId == id).OrderBy(d => d.Subject.SubjectName);
             if (model.Count() == 0)
             {
                 List<TeacherSubject> subList = new List<TeacherSubject>();
@@ -187,72 +183,102 @@ namespace EduExamine.Controllers
             return View(model.ToPagedList(page ?? 1, 20));
         }
 
-        public ActionResult SubjectCreate(int? teacherid)
+        public ActionResult SubjectCreate(long? id)
         {
             if (!LoginStatus())
                 return RedirectToAction("Login", "Admins", null);
 
-            Teacher teacher = _db.Teachers.Find(teacherid);
+            Teacher teacher = _db.Teachers.Find(id);
 
-            List<Subject> lstSubject = new List<Subject>();
+            List<SubjectList> lstSubject = new List<SubjectList>();
 
             var subjects = _db.Subjects.Include(d => d.Classes).ToList();
 
             foreach (var item in subjects)
             {
-                Subject subject = new Subject()
+                SubjectList subject = new SubjectList()
                 {
                     SubjectId = item.SubjectId,
-                    SubjectName = item.SubjectName + " - [" + item.Classes.ClassName + "]"
+                    SubjectName = item.SubjectName,
+                    ClassName = item.Classes.ClassName,
+                    Status = false
+
                 };
                 lstSubject.Add(subject);
             }
 
-            ViewBag.SubjectId = new SelectList(lstSubject, "SubjectId", "SubjectName");
-            TeacherSubject model = new TeacherSubject() { TeacherId = teacher.TeacherId, Teacher = teacher };
+            TeacherSubjectViewModel model = new TeacherSubjectViewModel()
+            {
+                TeacherId = teacher.TeacherId,
+                Teacher = teacher,
+                Subjects = lstSubject.OrderBy(x => x.SubjectName).ToList()
+            };
 
             return View(model);
         }
 
-
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult SubjectCreate([Bind(Include = "TeacherId,SubjectId")] TeacherSubject model)
+        public ActionResult SubjectCreate([Bind(Include = "TeacherId,subjects")] TeacherSubjectViewModel model)
         {
             if (!LoginStatus())
                 return RedirectToAction("Login", "Admins", null);
 
-            bool checkSubjects = false;
+            bool successed = false;
+            bool exists = false;
 
-            bool Exists = _db.TeacherSubjects.Any(d => d.SubjectId == model.SubjectId);
-            if (Exists)
+            foreach (var subject in model.Subjects)
             {
-                List<TeacherSubject> findteachersubject = _db.TeacherSubjects.Where(d => d.SubjectId == model.SubjectId).ToList();
-
-                if (findteachersubject != null)
+                if (subject.Status)
                 {
-                    foreach (var teacherSubject in findteachersubject)
+                    bool Exists = _db.TeacherSubjects.Any(d => d.SubjectId == subject.SubjectId);
+                    if (Exists)
                     {
-                        Teacher teacher = _db.Teachers.Find(teacherSubject.TeacherId);
-                        if (teacher.EduYearId == GetEduYearId)
+                        List<TeacherSubject> findteachersubject = _db.TeacherSubjects.Where(d => d.SubjectId == subject.SubjectId).ToList();
+
+                        if (findteachersubject != null)
                         {
-                            return Json("This has already been assigned.");
+                            foreach (var teacherSubject in findteachersubject)
+                            {
+                                Teacher teacher = _db.Teachers.Find(teacherSubject.TeacherId);
+                                if (teacher.EduYearId == GetEduYearId)
+                                {
+                                    exists = true;
+                                }
+                            }
                         }
                     }
+
+                    if (!exists)
+                    {
+                        if (ModelState.IsValid)
+                        {
+                            TeacherSubject sbmodel = new TeacherSubject()
+                            {
+                                SubjectId = subject.SubjectId,
+                                TeacherId = model.TeacherId,
+                            };
+
+                            _db.TeacherSubjects.Add(sbmodel);
+                            _db.SaveChanges();
+                            successed = true;
+                        }
+                        else
+                        {
+                            successed = false;
+                        }
+                    }
+                    exists = false;
                 }
             }
-
-            if (ModelState.IsValid)
+            if (successed)
             {
-                _db.TeacherSubjects.Add(model);
-                _db.SaveChanges();
                 return Json("");
             }
             else
             {
-                return Json("Model is not valid.");
+                return Json("This subject has already been assigned.");
             }
-
         }
 
         public ActionResult SubjectDelete(long? id)
@@ -281,14 +307,20 @@ namespace EduExamine.Controllers
                 return RedirectToAction("Login", "Admins", null);
 
             TeacherSubject subject = _db.TeacherSubjects.Find(model.TeacherSubjectId);
-            _db.TeacherSubjects.Remove(subject);
-            _db.SaveChanges();
-            return Json("");
+
+            if (subject != null)
+            {
+                _db.TeacherSubjects.Remove(subject);
+                _db.SaveChanges();
+                return Json("");
+            }
+            else
+            {
+                return Json("No record found.");
+            }
         }
 
-
         //Chapter Control of subject
-
         public ActionResult ChapterDisplay(int? id)
         {
             if (!LoginStatus())
@@ -311,14 +343,13 @@ namespace EduExamine.Controllers
             model.subject = _db.Subjects.Find(teacherSubject.SubjectId);
             model.teacher = _db.Teachers.Find(teacherSubject.TeacherId);
 
-            model.Chapters = _db.Chapters.Where(d => d.SubjectId == teacherSubject.SubjectId).OrderBy(d => d.ChapterId);
+            model.Chapters = _db.Chapters.Where(d => d.SubjectId == teacherSubject.SubjectId && d.EduYearId == GetEduYearId).OrderBy(d => d.ChapterId);
 
             return View(model);
         }
 
         //Teacher teaching performance
-
-        public ActionResult SettingsDisplay(int? id, int? eduyearid, int? subjectid)
+        public ActionResult SettingsDisplay(int? id, int? eduyearid, int? subjectid, int? teacherid)
         {
             if (!LoginStatus())
                 return RedirectToAction("Login", "Admins", null);
@@ -328,9 +359,14 @@ namespace EduExamine.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            TeacherChapterDate teacherchapterDate = _db.TeacherChapterDates.Find(id);
+            TeacherChapterDate teacherchapterDate = _db.TeacherChapterDates.Where(d => d.ChapterId == id && d.TeacherId == teacherid).FirstOrDefault();
 
-            TeacherSubject teacherSubject = _db.TeacherSubjects.Where(d => d.SubjectId == subjectid).First();
+            TeacherSubject teacherSubject = _db.TeacherSubjects.Where(d => d.SubjectId == subjectid && d.TeacherId == teacherid).First();
+
+            Chapter chapter = _db.Chapters.Find(id);
+            ChapterDate chapterDateExist = _db.ChapterDates.Find(id);
+
+            Subject subjects = _db.Subjects.Find(chapter.SubjectId);
 
             if (teacherSubject != null)
             {
@@ -341,19 +377,23 @@ namespace EduExamine.Controllers
                     SubjectId = teacherSubject.SubjectId,
                     TeacherId = teacherSubject.TeacherId,
                     Teacher = _db.Teachers.Find(teacherSubject.TeacherId),
-                    ChapterDate = _db.ChapterDates.Find(id),
+                    ChapterDate = chapterDateExist,
                     teachersubject = teacherSubject,
+                    Chapter = chapter,
+                    ClassId = subjects.ClassesId,
                     teacherTeachings = new List<TeacherTeaching>()
                 };
 
                 if (teacherchapterDate != null)
                 {
-                    model.TeacherChapterDateId = eduyearid != null ? 0 : teacherchapterDate.TeacherChapterDateId;
+                    model.ChapterId = eduyearid != null ? 0 : teacherchapterDate.ChapterId;
+                    model.Chapter = chapter;
                     model.TCStartDate = teacherchapterDate.TCStartDate;
                     model.TCEndDate = teacherchapterDate.TCEndDate;
-                    model.ChapterDate = teacherchapterDate.ChapterDate;
+                    model.ChapterDate = chapterDateExist;
                     model.Teacher = teacherchapterDate.Teacher;
                     model.TeacherId = teacherchapterDate.TeacherId;
+                    model.ClassId = subjects.ClassesId;
                 }
 
                 List<TeacherTeaching> lstTeacherTeaching = new List<TeacherTeaching>();
@@ -384,11 +424,12 @@ namespace EduExamine.Controllers
                     }
                 }
 
+
                 return View(model);
             }
+
             return View("");
         }
-
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -397,7 +438,7 @@ namespace EduExamine.Controllers
             if (!LoginStatus())
                 return RedirectToAction("Login", "Admins", null);
 
-            ChapterDate chapterdate = _db.ChapterDates.Find(model.ChapterDate.ChapterId);
+            Chapter chapter = _db.Chapters.Find(model.ChapterDate.ChapterId);
 
             if (ModelState.IsValid)
             {
@@ -407,15 +448,15 @@ namespace EduExamine.Controllers
 
                 TeacherChapterDate chapterDate = new TeacherChapterDate()
                 {
-                    ChapterDate = chapterdate,
+                    Chapter = chapter,
                     Teacher = _db.Teachers.Find(model.TeacherId),
                     TeacherId = model.TeacherId,
                     TCStartDate = model.TCStartDate,
                     TCEndDate = model.TCEndDate,
-                    TeacherChapterDateId = model.ChapterDate.ChapterId
+                    ChapterId = model.ChapterDate.ChapterId
                 };
 
-                bool Exists = _db.TeacherChapterDates.Any(d => d.TeacherChapterDateId == model.ChapterDate.ChapterId && d.TeacherId == model.TeacherId);
+                bool Exists = _db.TeacherChapterDates.Any(d => d.ChapterId == model.ChapterDate.ChapterId && d.TeacherId == model.TeacherId);
                 if (!Exists)
                 {
                     _db.TeacherChapterDates.Add(chapterDate);
@@ -434,7 +475,6 @@ namespace EduExamine.Controllers
             }
 
         }
-
 
         //SubmitChapterTeaching
         [HttpPost]
@@ -497,8 +537,6 @@ namespace EduExamine.Controllers
             }
 
         }
-
-
 
         protected override void Dispose(bool disposing)
         {

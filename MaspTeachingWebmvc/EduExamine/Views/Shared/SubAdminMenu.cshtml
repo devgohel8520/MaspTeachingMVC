@@ -14,11 +14,8 @@
         </div>
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
-                <li><a href="@Url.Action("TTIndex", "TeachingTypes", null)">T-TYPE</a></li>
-                <li><a href="@Url.Action("CIndex", "Classes", null)">CLASS</a></li>
-                <li><a href="@Url.Action("TIndex", "Teachers", null)">TEACHER</a></li>
-                <li><a href="@Url.Action("Index", "Teaching", null)">TEACHING</a></li>
-                <li><a href="@Url.Action("EIndex", "Exams", null)">EXAM</a></li>
+                <li><a href="@Url.Action("AdIndexAdmin", "Admins", null)">ADMIN</a></li>
+                <li><a href="@Url.Action("EdIndex", "EduYears", null)">EDU-YEAR</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right" title="LOGOUT">
                 <li><a>@Request.Cookies["MapsUser"]["FromYear"].ToString()</a></li>

@@ -1,4 +1,4 @@
-﻿@model EduExamine.Models.TeacherSubject
+﻿@model EduExamine.Models.TeacherSubjectViewModel
 
 @{
     ViewBag.Title = "Add New";
@@ -15,27 +15,37 @@
             <h4 style="font-weight:normal; font-family:'Century Gothic';">Add Subject</h4>
         </div>
         <div class="col-md-12 top-twenty">
-            @using (Ajax.BeginForm("SubjectCreate", new AjaxOptions { }))
+            @if (Model.Subjects.Count != 0)
             {
-                <div class="alert-danger error-list">
-                    <div id="errorD" style="padding:10px; margin-bottom:20px; display:none;">
+                using (Ajax.BeginForm("SubjectCreate", new AjaxOptions { }))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.HiddenFor(model => model.TeacherId)
+                    <div class="alert-danger error-list">
+                        <div id="errorD" style="padding:10px; margin-bottom:20px; display:none;">
 
+                        </div>
                     </div>
-                </div>
+                    <div class="col-md-12 bg-info" style="padding:5px; padding-left:10px;">
+                        Subjects
+                    </div>
+                    <div class="col-md-12 subject-lstbox">
+                        @for (int i = 0; i < Model.Subjects.Count; i++)
+                        {
 
-                @Html.AntiForgeryToken()
-                @Html.HiddenFor(d => d.TeacherId)
-                <div class="form-group input-group input-group-lg">
-                    <span class="input-group-addon"><i class="glyphicon glyphicon-subscript"></i></span>
-                    @Html.DropDownList("SubjectId", null, htmlAttributes: new { @class = "form-control" })
-                    @Html.ValidationMessageFor(model => model.SubjectId, "", new { @class = "text-danger" })
-                </div>
-                <div class="form-group text-right">
-                    <input id="submit" type="button" value="Add" onclick="submitUniversal(this, '@Url.Action("SubjectDisplay", "Teachers", new { id = Model.TeacherId })')" class="btn btn-info" />
-                    <a href="@Url.Action("SubjectDisplay", "Teachers", new { id = Model.TeacherId })" class="btn btn-default">
-                        Back
-                    </a>
-                </div>
+                        @Html.HiddenFor(d => @Model.Subjects[i].SubjectId)
+                        <div class="col-md-12 lstdata">
+                            @Html.EditorFor(model => model.Subjects[i].Status) @Model.Subjects[i].SubjectName - <lbl style="font-size:11px;">@Model.Subjects[i].ClassName</lbl>
+</div>
+                        }
+                    </div>
+                    <div class="col-md-12 bg-info text-right" style="padding:5px;">
+                        <input id="submit" type="button" value="Add" onclick="submitUniversal(this, '@Url.Action("SubjectDisplay", "Teachers", new { id = Model.TeacherId })')" class="btn btn-info" />
+                        <a href="@Url.Action("SubjectDisplay", "Teachers", new { id = Model.TeacherId })" class="btn btn-default">
+                            Back
+                        </a>
+                    </div>
+                }
             }
         </div>
     </div>

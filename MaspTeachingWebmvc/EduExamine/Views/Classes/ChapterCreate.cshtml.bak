@@ -22,7 +22,6 @@
                 </div>
                 @Html.AntiForgeryToken()
                 @Html.HiddenFor(d => d.SubjectId)
-                @Html.HiddenFor(d => d.EduYearId)
                 <div class="form-group input-group input-group-lg">
                     <span class="input-group-addon"><i class="glyphicon glyphicon-tags"></i></span>
                     @Html.EditorFor(model => model.ChapterName, new { htmlAttributes = new { @class = "form-control", @placeholder = "ENTER NO. OF CHAPTER YOU WANT TO CREATE" } })

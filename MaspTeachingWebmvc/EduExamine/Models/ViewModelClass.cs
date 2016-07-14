@@ -29,22 +29,25 @@ namespace EduExamine.Models
         [DataType(DataType.Date)]
         public DateTime CEndDate { get; set; }
         public Chapter Chapter { get; set; }
-        [Required(ErrorMessage = "*")]
-        [DataType(DataType.Date)]
-        public int EduYearId { get; set; }
-        public EduYear EduYear { get; set; }
-        public TeacherChapterDate TeacherChapterDate { get; set; }
+
+        public bool CheckChapterDate { get; set; }
+        //[Required(ErrorMessage = "*")]
+        //[DataType(DataType.Date)]
+        //public int EduYearId { get; set; }
+        //public EduYear EduYear { get; set; }
+        //public TeacherChapterDate TeacherChapterDate { get; set; }
         public List<ChapterTeaching> chapterTeachings { get; set; }
     }
 
     public class TeacherDateAndTeaching
     {
-        public long TeacherChapterDateId { get; set; }
+        public long ChapterId { get; set; }
+        public Chapter Chapter { get; set; }
+
         [Required(ErrorMessage = "*")]
         public long TeacherId { get; set; }
         public Teacher Teacher { get; set; }
 
-        public ChapterDate ChapterDate { get; set; }
         [Required(ErrorMessage = "*")]
         [DataType(DataType.Date)]
         public DateTime TCStartDate { get; set; }
@@ -55,6 +58,10 @@ namespace EduExamine.Models
         public TeacherSubject teachersubject { get; set; }
         public long SubjectId { get; set; }
         public List<TeacherTeaching> teacherTeachings { get; set; }
+
+        public ChapterDate ChapterDate { get; set; }
+        public int eduyearid { get; set; }
+        public long ClassId { get; set; }
     }
 
     public class TeacherChapterViewModel
@@ -85,6 +92,8 @@ namespace EduExamine.Models
     {
         public int RankId { get; set; }
         public Teacher Teacher { get; set; }
+        public long TeacherId { get; set; }
+        public string TeacherFullName { get; set; }
         public int TotalAvg { get; set; }
         public int TeacheringAvg { get; set; }
         public int ExamAvg { get; set; }
@@ -95,11 +104,50 @@ namespace EduExamine.Models
         public EduYear EduYears { get; set; }
     }
 
+    public class TeacherSubjectViewModel
+    {
+        public long TeacherId { get; set; }
+        public Teacher Teacher { get; set; }
+        public List<SubjectList> Subjects { get; set; }
+
+    }
+
+    public class SubjectList
+    {
+        public long SubjectId { get; set; }
+        public string SubjectName { get; set; }
+        public string ClassName { get; set; }
+
+        public long ClassesId { get; set; }
+        public Classes Classes { get; set; }
+
+        public ICollection<TeacherSubject> TeacherSubjects { get; set; }
+        public ICollection<ExamSubject> ExamSubjects { get; set; }
+        public ICollection<Chapter> Chapters { get; set; }
+
+        public bool Status { get; set; }
+    }
+
+    public class ExamMarksGroupViewModel
+    {
+        public long TeacherId { get; set; }
+        public string FullName { get; set; }
+        public long ExamId { get; set; }
+        public long SubjectId { get; set; }
+        public int AvgMarks { get; set; }
+        public int ExamMarks { get; set; }
+    }
+
     public enum SpeedTest
     {
-        Perfect,
+        ExtremlySlow,
+        VerySlow,
         Slow,
+        Perfect,
         Fast,
+        VeryFast,
+        ExtremlyFast,
+        NA
     }
 
 }

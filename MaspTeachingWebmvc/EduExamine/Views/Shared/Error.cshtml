@@ -1,13 +1,35 @@
-﻿<!DOCTYPE html>
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Error</title>
-</head>
-<body>
-    <hgroup>
-        <h1>Error.</h1>
-        <h2>An error occurred while processing your request.</h2>
-    </hgroup>
-</body>
-</html>
+﻿@{
+    ViewBag.Title = "Error";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container-start">
+    <div class="row">
+        <div class="col-md-12">
+            <h3>
+                <strong>Sorry, this page isn't available</strong>
+            </h3>
+            <hr />
+        </div>
+        <div class="col-md-12">
+            <div class="jumbotron" style="padding-bottom:30px;">
+                <p>
+                    The resource you are looking for has been removed, had its name changed, or is temporarily unavailable.
+                </p>
+                <p>
+                    <ul>
+                        <li>The directory or file specified does not exist on the Web server.</li>
+                        <li>The URL contains a typographical error.</li>
+                        <li>A custom filter or module, such as URLScan, restricts access to the file.</li>
+                    </ul>
+                </p>
+            </div>
+        </div>
+        <div class="col-md-12 text-center">
+            <a class="btn btn-link" href="@Url.Action("Index","Home")"> &lsaquo;&lsaquo; Go Back</a>
+        </div>
+    </div>
+</div>
+<hr />
+
+

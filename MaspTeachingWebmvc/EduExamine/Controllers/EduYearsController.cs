@@ -13,7 +13,7 @@ namespace EduExamine.Controllers
     {
         EduExamineContext _db;
         public HttpCookie userCookie;
-        public AdminType AdminType;
+        public AdminType adminType;
 
         public EduYearsController()
         {
@@ -24,7 +24,7 @@ namespace EduExamine.Controllers
             if (Request.Cookies["MapsUser"] != null)
             {
                 userCookie = HttpContext.Request.Cookies["MapsUser"];
-                AdminType = (AdminType)Enum.Parse(typeof(AdminType), userCookie["Type"], true);
+                adminType = (AdminType)Enum.Parse(typeof(AdminType), userCookie["Type"], true);
                 return true;
             }
             return false;
@@ -35,6 +35,9 @@ namespace EduExamine.Controllers
         {
             if (!LoginStatus())
                 return RedirectToAction("Login", "Admins", null);
+
+            if (!adminType.Equals(AdminType.Admin))
+                return RedirectToAction("Index", "SubAdmin", null);
 
             if (Search != null)
             {
@@ -53,6 +56,9 @@ namespace EduExamine.Controllers
         {
             if (!LoginStatus())
                 return RedirectToAction("Login", "Admins", null);
+
+            if (!adminType.Equals(AdminType.Admin))
+                return RedirectToAction("Index", "SubAdmin", null);
 
             return View();
         }
@@ -90,6 +96,9 @@ namespace EduExamine.Controllers
         {
             if (!LoginStatus())
                 return RedirectToAction("Login", "Admins", null);
+
+            if (!adminType.Equals(AdminType.Admin))
+                return RedirectToAction("Index", "SubAdmin", null);
 
             if (id == null)
             {
@@ -136,6 +145,9 @@ namespace EduExamine.Controllers
         {
             if (!LoginStatus())
                 return RedirectToAction("Login", "Admins", null);
+
+            if (!adminType.Equals(AdminType.Admin))
+                return RedirectToAction("Index", "SubAdmin", null);
 
             if (id == null)
             {
