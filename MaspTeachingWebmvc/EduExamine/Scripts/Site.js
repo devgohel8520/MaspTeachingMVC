@@ -46,7 +46,6 @@ function submitUniversal(btnSubmit, target) {
                 location.href = target;
             }
             else {
-                console.log(data);
                 errorDiv.text(data);
                 errorDiv.show();
             }

@@ -98,6 +98,7 @@ namespace EduExamine.Models
         public int TeacheringAvg { get; set; }
         public int ExamAvg { get; set; }
         public SpeedTest Speed { get; set; }
+        public string SpeedDays { get; set; }
         public List<TeacherTeaching> WeakNess { get; set; }
 
         public int EduYearId { get; set; }
@@ -147,7 +148,8 @@ namespace EduExamine.Models
         Fast,
         VeryFast,
         ExtremlyFast,
-        NA
+        NA,
+        Waiting
     }
 
 }

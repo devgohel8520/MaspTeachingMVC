@@ -106,17 +106,21 @@ namespace EduExamine.Controllers
                         int diffCD = chapterDate.CEndDate.Subtract(chapterDate.CStartDate).Days;
                         int diffTCD = findVal.TCEndDate.Subtract(findVal.TCStartDate).Days;
                         int diff = diffCD - diffTCD;
+
+
+                        findResult.SpeedDays = Convert.ToString(diff);
+
                         if (diff <= -11)
                             findResult.Speed = SpeedTest.ExtremlySlow;
-                        else if (diff <= -10 && diff >= -8)
+                        else if (diff >= -10 && diff <= -8)
                             findResult.Speed = SpeedTest.VerySlow;
-                        else if (diff < -7 && diff >= -4)
+                        else if (diff >= -7 && diff <= -4)
                             findResult.Speed = SpeedTest.Slow;
-                        else if (diff <= -3 && diff >= 3)
+                        else if (diff >= -3 && diff <= 3)
                             findResult.Speed = SpeedTest.Perfect;
-                        else if (diff <= 4 && diff >= 7)
+                        else if (diff >= 4 && diff <= 7)
                             findResult.Speed = SpeedTest.Fast;
-                        else if (diff <= 8 && diff >= 10)
+                        else if (diff >= 8 && diff <= 10)
                             findResult.Speed = SpeedTest.VeryFast;
                         else if (diff >= 11)
                             findResult.Speed = SpeedTest.ExtremlyFast;
@@ -126,7 +130,20 @@ namespace EduExamine.Controllers
                     }
                     else
                     {
-                        findResult.Speed = SpeedTest.NA;
+                        var chapterDate = ChaptersDates.Where(c => c.CStartDate < DateTime.Now).OrderByDescending(c => c.CStartDate).Take(1).First();
+
+                        if (chapterDate != null)
+                        {
+                            int diffCD = DateTime.Now.Subtract(chapterDate.CStartDate).Days;
+                            int diff = diffCD;
+                            findResult.Speed = SpeedTest.Waiting;
+                            findResult.SpeedDays = Convert.ToString(diff);
+                        }
+                        else
+                        {
+                            findResult.Speed = SpeedTest.NA;
+                            findResult.SpeedDays = string.Empty;
+                        }
                     }
                 }
             }
@@ -229,17 +246,21 @@ namespace EduExamine.Controllers
                         int diffCD = chapterDate.CEndDate.Subtract(chapterDate.CStartDate).Days;
                         int diffTCD = findVal.TCEndDate.Subtract(findVal.TCStartDate).Days;
                         int diff = diffCD - diffTCD;
+
+
+                        findResult.SpeedDays = Convert.ToString(diff);
+
                         if (diff <= -11)
                             findResult.Speed = SpeedTest.ExtremlySlow;
-                        else if (diff <= -10 && diff >= -8)
+                        else if (diff >= -10 && diff <= -8)
                             findResult.Speed = SpeedTest.VerySlow;
-                        else if (diff < -7 && diff >= -4)
+                        else if (diff >= -7 && diff <= -4)
                             findResult.Speed = SpeedTest.Slow;
-                        else if (diff <= -3 && diff >= 3)
+                        else if (diff >= -3 && diff <= 3)
                             findResult.Speed = SpeedTest.Perfect;
-                        else if (diff <= 4 && diff >= 7)
+                        else if (diff >= 4 && diff <= 7)
                             findResult.Speed = SpeedTest.Fast;
-                        else if (diff <= 8 && diff >= 10)
+                        else if (diff >= 8 && diff <= 10)
                             findResult.Speed = SpeedTest.VeryFast;
                         else if (diff >= 11)
                             findResult.Speed = SpeedTest.ExtremlyFast;
@@ -249,7 +270,20 @@ namespace EduExamine.Controllers
                     }
                     else
                     {
-                        findResult.Speed = SpeedTest.NA;
+                        var chapterDate = ChaptersDates.Where(c => c.CStartDate < DateTime.Now).OrderByDescending(c => c.CStartDate).Take(1).First();
+
+                        if (chapterDate != null)
+                        {
+                            int diffCD = DateTime.Now.Subtract(chapterDate.CStartDate).Days;
+                            int diff = diffCD;
+                            findResult.Speed = SpeedTest.Waiting;
+                            findResult.SpeedDays = Convert.ToString(diff);
+                        }
+                        else
+                        {
+                            findResult.Speed = SpeedTest.NA;
+                            findResult.SpeedDays = string.Empty;
+                        }
                     }
                 }
             }

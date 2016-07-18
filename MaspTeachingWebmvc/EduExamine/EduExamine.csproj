@@ -141,6 +141,11 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201607150531362_newdatabase.cs" />
+    <Compile Include="Migrations\201607150531362_newdatabase.Designer.cs">
+      <DependentUpon>201607150531362_newdatabase.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\EduExamineContext.cs" />
     <Compile Include="Models\ViewModelClass.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -164,6 +169,7 @@
     <Content Include="Content\bootstrap.min.css.map" />
     <Content Include="Content\bootstrap.css.map" />
     <None Include="Properties\PublishProfiles\mapsprofile.pubxml" />
+    <None Include="Properties\PublishProfiles\SetNewUpdate.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
@@ -259,6 +265,11 @@
   <ItemGroup>
     <Content Include="packages.config" />
     <None Include="Project_Readme.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201607150531362_newdatabase.resx">
+      <DependentUpon>201607150531362_newdatabase.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
